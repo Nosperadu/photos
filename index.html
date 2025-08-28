@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jonas Nemeth — Photo Library</title>
+  <meta name="description" content="Minimal, fast, and responsive photo library by Jonas Nemeth." />
+  <meta name="color-scheme" content="dark light" />
+  <meta property="og:title" content="Jonas Nemeth — Photo Library" />
+  <meta property="og:description" content="Selected works: street, architecture, landscape." />
+  <meta property="og:type" content="website" />
+  <meta name="robots" content="index,follow" />
+  <link rel="icon" href="/favicon.ico" />
+  <style>
+    :root{
+      --bg:#0b0b0b;--fg:#eaeaea;--muted:#9a9a9a;--card:#121212;--accent:#c5c5c5;--gap:1rem;
+      --maxw:1200px;--radius:16px;--shadow:0 8px 30px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    a{color:inherit;text-decoration:none}
+    header{max-width:var(--maxw);margin:24px auto;padding:0 20px;display:flex;align-items:end;justify-content:space-between;gap:12px}
+    .brand{display:flex;flex-direction:column;gap:6px}
+    .title{font-size:clamp(22px,3vw,32px);font-weight:600;letter-spacing:.2px}
+    .subtitle{color:var(--muted);font-size:14px}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
+    .pill{border:1px solid #242424;padding:6px 10px;border-radius:999px;background:#0f0f0f}
+    main{max-width:var(--maxw);margin:0 auto;padding:8px 20px 60px}
+    /* Masonry-like grid using CSS columns for simplicity and great perf */
+    .gallery{column-width:320px;column-gap:var(--gap)}
+    figure{break-inside:avoid;border-radius:var(--radius);overflow:hidden;background:var(--card);margin:0 0 var(--gap);box-shadow:var(--shadow);border:1px solid #1a1a1a}
+    figure img{width:100%;height:auto;display:block}
+    figcaption{padding:10px 12px;color:var(--muted);font-size:13px;border-top:1px solid #1a1a1a}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    /* Lightbox */
+    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;place-items:center;z-index:99}
+    .lightbox.open{display:grid}
+    .lightbox img{max-width:min(92vw,1600px);max-height:88vh;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+    .lightbox .meta{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);color:#d0d0d0;font-size:14px;background:#0e0e0e;border:1px solid #242424;padding:6px 10px;border-radius:999px}
+    .close{position:fixed;top:14px;right:16px;border:none;background:#0e0e0e;border:1px solid #242424;color:#dcdcdc;padding:8px 12px;border-radius:999px;cursor:pointer}
+    footer{max-width:var(--maxw);margin:40px auto 60px;padding:0 20px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    @media (prefers-color-scheme:light){
+      :root{--bg:#fafafa;--fg:#0c0c0c;--muted:#5a5a5a;--card:#fff}
+      figure{border-color:#f0f0f0}
+      figcaption{border-top-color:#f0f0f0}
+      .pill{background:#fff;border-color:#e8e8e8}
+      .lightbox{background:rgba(255,255,255,.98)}
+      .close{background:#fff;border-color:#e8e8e8;color:#111}
+    }
+  </style>
+</head>
+<body>
+  <a class="sr-only" href="#gallery">Skip to content</a>
+  <header>
+    <div class="brand">
+      <div class="title">Jonas Nemeth</div>
+      <div class="subtitle">Street · Architecture · Landscape</div>
+    </div>
+    <nav class="nav" aria-label="Filters">
+      <!-- Optional filters; replace text with your tags or remove entirely -->
+      <button class="pill" data-filter="all">All</button>
+      <button class="pill" data-filter="street">Street</button>
+      <button class="pill" data-filter="architecture">Architecture</button>
+      <button class="pill" data-filter="landscape">Landscape</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="gallery" class="gallery">
+      <!-- ✨ HOW TO ADD PHOTOS ✨
+        1) Put full-size files in /images/full/ and export ~1600px long edge for web.
+        2) Put matching small thumbnails in /images/thumbs/ (e.g., 800px long edge). Same filenames.
+        3) Duplicate a <figure> block below and change data-* + filenames.
+        4) data-tags are used by the filter buttons above.
+      -->
+
+      <!-- SAMPLE IMAGES (replace with your own). Using placeholder via picsum.photos just for preview. -->
+      <figure data-tags="street">
+        <img loading="lazy" src="https://picsum.photos/id/1011/800/1200" data-full="https://picsum.photos/id/1011/1200/1800" alt="Night street, reflections">
+        <figcaption>Night reflections — 2025 · Street</figcaption>
+      </figure>
+      <figure data-tags="architecture">
+        <img loading="lazy" src="https://picsum.photos/id/1015/800/1000" data-full="https://picsum.photos/id/1015/1600/2000" alt="Brutalist lines">
+        <figcaption>Brutalist lines — 2025 · Architecture</figcaption>
+      </figure>
+      <figure data-tags="landscape">
+        <img loading="lazy" src="https://picsum.photos/id/1016/800/1100" data-full="https://picsum.photos/id/1016/1600/2200" alt="Coastal mood">
+        <figcaption>Coastal mood — 2025 · Landscape</figcaption>
+      </figure>
+      <figure data-tags="street">
+        <img loading="lazy" src="https://picsum.photos/id/1035/800/1200" data-full="https://picsum.photos/id/1035/1600/2400" alt="Crosswalk geometry">
+        <figcaption>Crosswalk geometry — 2025 · Street</figcaption>
+      </figure>
+      <figure data-tags="architecture">
+        <img loading="lazy" src="https://picsum.photos/id/1025/800/1100" data-full="https://picsum.photos/id/1025/1600/2200" alt="Glass & steel">
+        <figcaption>Glass & steel — 2025 · Architecture</figcaption>
+      </figure>
+    </section>
+  </main>
+
+  <!-- Lightbox overlay -->
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="close" aria-label="Close">Close ✕</button>
+    <img alt="Expanded view" />
+    <div class="meta"></div>
+  </div>
+
+  <footer>
+    <div>© <span id="y"></span> Jonas Nemeth</div>
+    <div><a href="https://instagram.com/jonas.nmt" target="_blank" rel="noopener">@jonas.nmt</a></div>
+  </footer>
+
+  <script>
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Filtering
+    const pills = document.querySelectorAll('.pill');
+    const figs = Array.from(document.querySelectorAll('figure'));
+    pills.forEach(b=>b.addEventListener('click',()=>{
+      const tag = b.dataset.filter;
+      pills.forEach(p=>p.classList.remove('active'));
+      b.classList.add('active');
+      figs.forEach(f=>{
+        const show = tag==='all' || (f.dataset.tags||'').includes(tag);
+        f.style.display = show ? '' : 'none';
+      });
+    }));
+
+    // Lightbox
+    const lb = document.querySelector('.lightbox');
+    const lbImg = lb.querySelector('img');
+    const lbMeta = lb.querySelector('.meta');
+    const closeBtn = lb.querySelector('.close');
+
+    document.getElementById('gallery').addEventListener('click', (e)=>{
+      const img = e.target.closest('img');
+      if(!img) return;
+      const full = img.dataset.full || img.src;
+      lbImg.src = full;
+      const cap = img.closest('figure').querySelector('figcaption')?.textContent?.trim() || '';
+      lbMeta.textContent = cap;
+      lb.classList.add('open');
+      document.body.style.overflow='hidden';
+    });
+
+    function closeLB(){
+      lb.classList.remove('open');
+      document.body.style.overflow='';
+      lbImg.src='';
+    }
+    closeBtn.addEventListener('click', closeLB);
+    lb.addEventListener('click', (e)=>{ if(e.target===lb) closeLB(); });
+    document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeLB(); });
+  </script>
+</body>
+</html>
