@@ -13,8 +13,15 @@
   <link rel="icon" href="/favicon.ico" />
   <style>
     :root{
-      --bg:#0b0b0b;--fg:#eaeaea;--muted:#9a9a9a;--card:#121212;--accent:#c5c5c5;--gap:1rem;
-      --maxw:1200px;--radius:16px;--shadow:0 8px 30px rgba(0,0,0,.35);
+      --bg:#0b0b0b;
+      --fg:#eaeaea;
+      --muted:#9a9a9a;
+      --card:#121212;
+      --accent:#c5c5c5;
+      --gap:2rem;              /* vorher 1rem → mehr Abstand */
+      --maxw:1200px;
+      --radius:16px;
+      --shadow:0 8px 30px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -28,8 +35,19 @@
     .pill{border:1px solid #242424;padding:6px 10px;border-radius:999px;background:#0f0f0f}
     main{max-width:var(--maxw);margin:0 auto;padding:8px 20px 60px}
     /* Masonry-like grid using CSS columns for simplicity and great perf */
-    .gallery{column-width:320px;column-gap:var(--gap)}
-    figure{break-inside:avoid;border-radius:var(--radius);overflow:hidden;background:var(--card);margin:0 0 var(--gap);box-shadow:var(--shadow);border:1px solid #1a1a1a}
+    .gallery {
+      column-width: 320px;
+      column-gap: var(--gap);  /* nutzt jetzt den größeren Wert */
+    }
+    figure {
+      break-inside: avoid;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card);
+      margin: 0 0 var(--gap);   /* mehr vertikaler Abstand */
+      box-shadow: var(--shadow);
+      border: 1px solid #1a1a1a;
+    }
     figure img{width:100%;height:auto;display:block}
     figcaption{padding:10px 12px;color:var(--muted);font-size:13px;border-top:1px solid #1a1a1a}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
