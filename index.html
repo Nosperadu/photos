@@ -3,11 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jonas Nemeth — Photo Library</title>
+  <title>Jonas Németh — Photo Library</title>
   <meta name="description" content="Minimal, fast, and responsive photo library by Jonas Nemeth." />
   <meta name="color-scheme" content="dark light" />
-  <meta property="og:title" content="Jonas Nemeth — Photo Library" />
+  <meta property="og:title" content="Jonas Németh — Photo Library" />
   <meta property="og:description" content="Selected works: street, architecture, landscape." />
+
   <meta property="og:type" content="website" />
   <meta name="robots" content="index,follow" />
   <link rel="icon" href="/favicon.ico" />
@@ -59,23 +60,33 @@
     .close{position:fixed;top:14px;right:16px;border:none;background:#0e0e0e;border:1px solid #242424;color:#dcdcdc;padding:8px 12px;border-radius:999px;cursor:pointer}
     footer{max-width:var(--maxw);margin:40px auto 60px;padding:0 20px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
     @media (prefers-color-scheme:light){
-      :root{--bg:#fafafa;--fg:#0c0c0c;--muted:#5a5a5a;--card:#fff}
-      figure{border-color:#f0f0f0}
-      figcaption{border-top-color:#f0f0f0}
-      .pill{background:#fff;border-color:#e8e8e8}
-      .lightbox{background:rgba(255,255,255,.98)}
-      .close{background:#fff;border-color:#e8e8e8;color:#111}
+    :root{--bg:#fafafa;--fg:#0c0c0c;--muted:#5a5a5a;--card:#fff}
+    figure{border-color:#f0f0f0}
+    figcaption{border-top-color:#f0f0f0}
+    .pill{background:#fff;border-color:#e8e8e8}
+    .lightbox{background:rgba(255,255,255,.98)}
+    .close{background:#fff;border-color:#e8e8e8;color:#111}
+
     }
   </style>
 </head>
 <body>
   <a class="sr-only" href="#gallery">Skip to content</a>
-  <header>
-    <div class="brand">
-      <div class="title">Jonas Nemeth</div>
-      <div class="subtitle">Street · Architecture · Landscape</div>
-    </div>
-  </header>
+<header>
+  <div class="brand">
+    <div class="title">Jonas Nemeth</div>
+    <div class="subtitle">Street · Architecture · Landscape</div>
+  </div>
+  <div class="social">
+    <a href="https://instagram.com/jonas.nmt" target="_blank" rel="noopener">
+      <!-- Instagram Icon (SVG) -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="currentColor">
+        <path d="M224,202.66A53.34,53.34,0,1,0,277.34,256,53.38,53.38,0,0,0,224,202.66Zm124.71-41a54,54,0,0,0-30.27-30.27C293.91,123,224,123,224,123s-69.91,0-94.44,8.37a54,54,0,0,0-30.27,30.27C91,170.09,91,240,91,240s0,69.91,8.37,94.44a54,54,0,0,0,30.27,30.27C154.09,365,224,365,224,365s69.91,0,94.44-8.37a54,54,0,0,0,30.27-30.27C357,309.91,357,240,357,240S357,170.09,348.71,161.71ZM224,338a82,82,0,1,1,82-82A82,82,0,0,1,224,338Zm85.71-148.57a19.2,19.2,0,1,1,19.2-19.2A19.2,19.2,0,0,1,309.71,189.43Z"/>
+      </svg>
+      <span>@jonas.nmt</span>
+    </a>
+  </div>
+</header>
 
   <main>
     <section id="gallery" class="gallery">
