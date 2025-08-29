@@ -13,7 +13,7 @@
     :root{
       --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a;
       --hair:#2a2a2a; --maxw:1200px;
-      --gap:36px;                 /* Mehr Abstand zwischen Kacheln */
+      --gap:36px;
     }
     :root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; --hair:#e6e6e6; }
 
@@ -48,20 +48,21 @@
     .rule{max-width:var(--maxw); margin:16px auto 28px; padding:0 24px}
     .rule .line{height:1px; background:var(--hair)}
 
-    /* ====== GRID (art-directed) ====== */
+    /* ====== GRID (art-directed, natürliche Bildhöhen) ====== */
     .wrap{max-width:var(--maxw); margin:0 auto 80px; padding:0 24px}
     .grid{
       display:grid;
       grid-template-columns: repeat(12, 1fr);
       gap: var(--gap);
-      grid-auto-flow: dense; /* füllt Lücken smart */
+      grid-auto-flow: dense; /* füllt Lücken bestmöglich */
     }
 
-    /* Tile-Grundlagen */
     figure{ margin:0; }
     figure img{
-      width:100%; height:100%;
-      display:block; object-fit:cover; border:none; border-radius:0;
+      width:100%;
+      height:auto;           /* echtes Seitenverhältnis beibehalten */
+      display:block;
+      border:none; border-radius:0;
     }
     figcaption{
       margin-top:0.6rem;
@@ -71,22 +72,12 @@
       text-transform:uppercase;
     }
 
-    /* Aspect-Ratio-Formate */
-    .sq   { aspect-ratio: 1 / 1;   }
-    .land { aspect-ratio: 3 / 2;   }
-    .wide { aspect-ratio: 16 / 9;  }
-    .port { aspect-ratio: 2 / 3;   }
-    .tall { aspect-ratio: 9 / 16;  }
-
-    /* Spalten-Spans (12-Spalten-Grid) */
+    /* Spalten-Spans (12-Spalten-Grid) – Bildhöhen sind natürlich */
     .span-12{ grid-column: span 12; }
     .span-8 { grid-column: span 8;  }
     .span-6 { grid-column: span 6;  }
     .span-4 { grid-column: span 4;  }
     .span-3 { grid-column: span 3;  }
-
-    /* Hover minimal */
-    figure:hover figcaption{ text-decoration: underline; text-decoration-thickness:1px; }
 
     /* ====== LIGHTBOX ====== */
     .lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.94); display:none; place-items:center; z-index:99; }
@@ -120,7 +111,6 @@
       figcaption{ font-size:11px; }
     }
 
-    /* Smooth theme transition */
     html, body, .mast, .wrap, footer { transition: background-color .25s ease, color .25s ease; }
   </style>
 </head>
@@ -141,49 +131,43 @@
   <!-- SHOWCASE GRID -->
   <main class="wrap">
     <section id="gallery" class="grid">
-      <!-- HERO WIDE -->
-      <figure class="wide span-12">
+      <!-- HERO (volle Breite) -->
+      <figure class="span-12">
         <img src="images/IMG_7237.jpg" alt="Img 7237">
         <figcaption>Series — City Edge</figcaption>
       </figure>
 
-      <!-- TWO-UP -->
-      <figure class="land span-8">
+      <!-- Two-up -->
+      <figure class="span-8">
         <img src="images/IMG_7293.jpg" alt="Img 7293">
         <figcaption>Architecture</figcaption>
       </figure>
-      <figure class="sq span-4">
+      <figure class="span-4">
         <img src="images/IMG_7114.jpg" alt="Img 7114">
         <figcaption>Street</figcaption>
       </figure>
 
-      <!-- TRIPTYCH -->
-      <figure class="port span-4">
+      <!-- Triptych -->
+      <figure class="span-4">
         <img src="images/IMG_5954.jpg" alt="Img 5954">
         <figcaption>Portrait of a Corner</figcaption>
       </figure>
-      <figure class="sq span-4">
+      <figure class="span-4">
         <img src="images/IMG_7657.jpg" alt="Img 7657">
         <figcaption>Lines</figcaption>
       </figure>
-      <figure class="land span-4">
+      <figure class="span-4">
         <img src="images/IMG_7666.jpg" alt="Img 7666">
         <figcaption>Concrete Calm</figcaption>
       </figure>
 
-      <!-- FEATURE TALL + FILLERS -->
-      <figure class="tall span-3">
+      <!-- Feature + Filler (einzigartige Motive; Duplikat entfernt) -->
+      <figure class="span-6">
         <img src="images/IMG_7670.jpg" alt="Img 7670">
         <figcaption>Vertical Silence</figcaption>
       </figure>
-      <figure class="sq span-3">
-        <img src="images/IMG_7237.jpg" alt="Img 7237 alt">
-        <figcaption>Study</figcaption>
-      </figure>
-      <figure class="land span-6">
-        <img src="images/IMG_7293.jpg" alt="Img 7293 wide">
-        <figcaption>Structure & Space</figcaption>
-      </figure>
+      <!-- Wenn du ein weiteres Motiv hast, füge hier z.B. eine span-6 Kachel dazu -->
+      <!-- <figure class="span-6"><img src="images/DEIN_BILD.jpg" alt="Titel"><figcaption>Caption</figcaption></figure> -->
     </section>
   </main>
 
