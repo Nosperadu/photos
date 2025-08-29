@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Jonas Németh — Photo Library</title>
+  <title>Jonas Németh — Photo Works</title>
   <meta name="description" content="Editorial photography by Jonas Németh — Street, Architecture, Landscape." />
   <link rel="canonical" href="https://jonas-nemeth.de/">
   <meta name="color-scheme" content="dark light" />
-
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
       --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a;
-      --grid-gap:2.4rem; --grid-min:320px; --maxw:1200px; --hair:#2a2a2a;
-      --tile-h:420px; /* Einheitliche Kachelhöhe (anpassen, z.B. 360–480) */
+      --hair:#2a2a2a; --maxw:1200px;
+      --gap:20px;                 /* Grundabstand */
+      --col: 1fr;                 /* Fallback */
     }
     :root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; --hair:#e6e6e6; }
+
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -25,54 +25,68 @@
       font:400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
     }
-    a{color:inherit;text-decoration:none}
+    a{color:inherit; text-decoration:none}
 
-    /* Masthead */
-    .masthead{
-      max-width:var(--maxw); margin:48px auto 24px; padding:0 24px;
-      display:grid; grid-template-columns: 1fr auto; align-items:end; gap:1rem;
+    /* ====== MASTHEAD (magazine) ====== */
+    .mast{
+      max-width:var(--maxw); margin:48px auto 8px; padding:0 24px;
+      display:grid; grid-template-columns: 1fr auto; align-items:end; gap:16px;
     }
-    .mast-title{
+    .brand h1{
       font-family:"Playfair Display", Georgia, serif;
-      font-weight:700; letter-spacing:.02em;
-      font-size:clamp(40px,7vw,72px); line-height:1.05;
+      font-weight:700; letter-spacing:.01em;
+      font-size:clamp(42px,7vw,78px); line-height:1.03; margin:0;
     }
-    .mast-sub{
-      margin-top:8px; color:var(--muted);
+    .brand .strap{
+      margin-top:10px; color:var(--muted);
       text-transform:uppercase; letter-spacing:.18em; font-size:12px;
     }
-    .mast-aside{ display:flex; align-items:center; gap:16px; }
-    .social a{ color:var(--muted); font-weight:600; }
-    .social a:hover{ color:var(--fg); }
-    .btn-theme{
-      border:none; background:transparent; color:var(--fg); cursor:pointer;
-      font-size:18px; line-height:1; padding:6px; border-radius:8px;
-    }
-    .btn-theme:hover{ opacity:.85; }
+    .mast .aside{display:flex; align-items:center; gap:18px}
+    .aside a{color:var(--muted); font-weight:600}
+    .aside a:hover{color:var(--fg)}
+    .toggle{border:none; background:transparent; color:var(--fg); font-size:18px; cursor:pointer}
+    .rule{max-width:var(--maxw); margin:16px auto 28px; padding:0 24px}
+    .rule .line{height:1px; background:var(--hair)}
 
-    .rule{ max-width:var(--maxw); margin:16px auto 32px; padding:0 24px; }
-    .rule .line{ height:1px; background:var(--hair); }
-
-    /* Gallery: Grid + einheitliche Höhe, keine Lücken */
-    .container{ max-width:var(--maxw); margin:0 auto; padding:0 24px 72px; }
-    .gallery{
+    /* ====== SHOWCASE (creative grid) ====== */
+    .wrap{max-width:var(--maxw); margin:0 auto 80px; padding:0 24px}
+    .grid{
       display:grid;
-      grid-template-columns: repeat(auto-fit, minmax(var(--grid-min), 1fr));
-      gap:var(--grid-gap);
+      grid-template-columns: repeat(12, 1fr);   /* 12-Spalten-Grid für Art Direction */
+      gap: var(--gap);
+      grid-auto-flow: dense;                    /* füllt Lücken smart */
     }
-    figure{ margin:0; }
+
+    /* Artikel (Tiles) */
+    figure{margin:0; position:relative}
     figure img{
-      width:100%;
-      height:var(--tile-h);     /* Kern: gleiche Höhe */
-      object-fit:cover;         /* füllt die Kachel, schneidet schonend */
-      display:block; border:none; border-radius:0;
+      width:100%; height:100%; display:block; object-fit:cover; border:none; border-radius:0;
     }
     figcaption{
-      margin-top:.6rem; color:var(--muted);
-      font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+      position:absolute; left:12px; bottom:12px;
+      color:rgba(255,255,255,.85); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+      backdrop-filter: blur(0px);
     }
 
-    /* Lightbox minimal */
+    /* Tile-Formate (Aspect Ratios) */
+    .sq   { aspect-ratio: 1 / 1;     }
+    .land { aspect-ratio: 3 / 2;     }
+    .wide { aspect-ratio: 16 / 9;    }
+    .port { aspect-ratio: 2 / 3;     }
+    .tall { aspect-ratio: 9 / 16;    }
+
+    /* Spalten-/Reihenspannen für Rhythmus */
+    /* Default: 12 Spalten → mobile skaliert von selbst; unten Breakpoints */
+    .span-6 { grid-column: span 6; }
+    .span-8 { grid-column: span 8; }
+    .span-12{ grid-column: span 12; }
+    .span-4 { grid-column: span 4; }
+    .span-3 { grid-column: span 3; }
+
+    /* Kleine „Editorial“-Hover-Note (optional, minimal) */
+    figure:hover figcaption{ text-decoration: underline; text-decoration-thickness:1px; }
+
+    /* ====== LIGHTBOX ====== */
     .lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.94); display:none; place-items:center; z-index:99; }
     .lightbox.open{ display:grid; }
     .lightbox img{ max-width:min(92vw,1600px); max-height:88vh; border:none; }
@@ -85,55 +99,109 @@
       padding:6px 10px; cursor:pointer; font-size:16px;
     }
 
-    /* Footer */
+    /* ====== FOOTER ====== */
     footer{
       max-width:var(--maxw); margin:40px auto 60px; padding:0 24px;
       color:var(--muted); font-size:13px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
     }
 
-    html, body, .masthead, .container, footer, figure, figcaption {
-      transition: background-color .25s ease, color .25s ease;
+    /* ====== RESPONSIVE ====== */
+    @media (max-width: 1100px){
+      .span-12{ grid-column: span 12; }
+      .span-8 { grid-column: span 12; }
+      .span-6 { grid-column: span 12; }
+      .span-4 { grid-column: span 6;  }
+      .span-3 { grid-column: span 6;  }
     }
+    @media (max-width: 640px){
+      .span-4, .span-3 { grid-column: span 12; }
+      figcaption{ font-size:11px; left:10px; bottom:10px; }
+    }
+
+    /* Smooth theme transition */
+    html, body, .mast, .wrap, footer { transition: background-color .25s ease, color .25s ease; }
   </style>
 </head>
 <body>
-  <header class="masthead">
-    <div>
-      <div class="mast-title">Jonas Németh</div>
-      <div class="mast-sub">Street • Architecture • Landscape</div>
+  <!-- MASTHEAD -->
+  <header class="mast">
+    <div class="brand">
+      <h1>Jonas Németh</h1>
+      <div class="strap">Street • Architecture • Landscape</div>
     </div>
-    <div class="mast-aside">
-      <div class="social"><a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a></div>
-      <button id="themeToggle" class="btn-theme" aria-label="Theme umschalten">🌙</button>
+    <div class="aside">
+      <a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a>
+      <button id="themeToggle" class="toggle" aria-label="Theme umschalten">🌙</button>
     </div>
   </header>
   <div class="rule"><div class="line"></div></div>
 
-  <main class="container">
-    <section id="gallery" class="gallery">
-      <figure><img loading="lazy" src="images/IMG_5954.jpg" alt="Img 5954"><figcaption>Img 5954</figcaption></figure>
-      <figure><img loading="lazy" src="images/IMG_7114.jpg" alt="Img 7114"><figcaption>Img 7114</figcaption></figure>
-      <figure><img loading="lazy" src="images/IMG_7237.jpg" alt="Img 7237"><figcaption>Img 7237</figcaption></figure>
-      <figure><img loading="lazy" src="images/IMG_7293.jpg" alt="Img 7293"><figcaption>Img 7293</figcaption></figure>
-      <figure><img loading="lazy" src="images/IMG_7657.jpg" alt="Img 7657"><figcaption>Img 7657</figcaption></figure>
-      <figure><img loading="lazy" src="images/IMG_7666.jpg" alt="Img 7666"><figcaption>Img 7666</figcaption></figure>
-      <figure><img loading="lazy" src="images/IMG_7670.jpg" alt="Img 7670"><figcaption>Img 7670</figcaption></figure>
+  <!-- SHOWCASE GRID (art-directed) -->
+  <main class="wrap">
+    <section id="gallery" class="grid">
+      <!-- HERO WIDE -->
+      <figure class="wide span-12">
+        <img src="images/IMG_7237.jpg" alt="Img 7237">
+        <figcaption>Series — City Edge</figcaption>
+      </figure>
+
+      <!-- TWO-UP (breites + quadratisch) -->
+      <figure class="land span-8">
+        <img src="images/IMG_7293.jpg" alt="Img 7293">
+        <figcaption>Architecture</figcaption>
+      </figure>
+      <figure class="sq span-4">
+        <img src="images/IMG_7114.jpg" alt="Img 7114">
+        <figcaption>Street</figcaption>
+      </figure>
+
+      <!-- TRIPTYCH (drei gleichbreite) -->
+      <figure class="port span-4">
+        <img src="images/IMG_5954.jpg" alt="Img 5954">
+        <figcaption>Portrait of a Corner</figcaption>
+      </figure>
+      <figure class="sq span-4">
+        <img src="images/IMG_7657.jpg" alt="Img 7657">
+        <figcaption>Lines</figcaption>
+      </figure>
+      <figure class="land span-4">
+        <img src="images/IMG_7666.jpg" alt="Img 7666">
+        <figcaption>Concrete Calm</figcaption>
+      </figure>
+
+      <!-- FEATURE TALL + FILLERS (dense pack) -->
+      <figure class="tall span-3">
+        <img src="images/IMG_7670.jpg" alt="Img 7670">
+        <figcaption>Vertical Silence</figcaption>
+      </figure>
+      <figure class="sq span-3">
+        <img src="images/IMG_7237.jpg" alt="Img 7237 alt">
+        <figcaption>Study</figcaption>
+      </figure>
+      <figure class="land span-6">
+        <img src="images/IMG_7293.jpg" alt="Img 7293 wide">
+        <figcaption>Structure & Space</figcaption>
+      </figure>
+
+      <!-- Weitere Reihen: dupliziere das Muster (HERO → TWO-UP → TRIPTYCH → TALL+FILL) -->
     </section>
   </main>
 
+  <!-- LIGHTBOX -->
   <div class="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
     <button class="close" aria-label="Schließen">✕</button>
     <img alt="Expanded view" />
     <div class="meta"></div>
   </div>
 
+  <!-- FOOTER -->
   <footer>
     <div>© <span id="y"></span> Jonas Németh</div>
     <div><a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a></div>
   </footer>
 
   <script>
-    // Jahr
+    // Year
     document.getElementById('y').textContent = new Date().getFullYear();
 
     // Lightbox
@@ -152,7 +220,7 @@
     lb.addEventListener('click',e=>{ if(e.target===lb) closeLB(); });
     document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLB(); });
 
-    // Theme Toggle
+    // Theme toggle
     (function(){
       const KEY='theme'; const btn=document.getElementById('themeToggle');
       function preferred(){
