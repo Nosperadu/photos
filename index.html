@@ -68,6 +68,23 @@
     .close{background:#fff;border-color:#e8e8e8;color:#111}
 
     }
+    /* Layout für Actions rechts oben */
+    .header-actions { display:flex; align-items:center; gap:12px; }
+
+/* Button-Styling wiederverwenden/leicht akzentuieren */
+    .pill.btn-theme { cursor:pointer; line-height:1; }
+
+/* Explizite Themes – überschreiben Variablen */
+    :root[data-theme="dark"] {
+      --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a; --card:#121212; --accent:#c5c5c5;
+    }
+
+    :root[data-theme="light"] {
+      --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; --card:#ffffff; --accent:#222222;
+    }
+
+
+    html, body, figure, header, main, footer { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
   </style>
 </head>
 <body>
@@ -86,11 +103,14 @@
       <span>@jonas.bild/</span>
     </a>
   </div>
+  <div class="header-actions">
+    <button id="themeToggle" class="pill btn-theme" aria-label="Toggle theme">🌙</button>
+  </div>
 </header>
 
   <main>
     <section id="gallery" class="gallery">
-      
+
       <figure>
         <img loading="lazy" src="images/IMG_5954.jpg" alt="Img 5954">
         <figcaption>Img 5954</figcaption>
