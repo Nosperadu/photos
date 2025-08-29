@@ -35,7 +35,7 @@ Photography for me is **a way of slowing down**, of seeing the unnoticed, and tu
 ---
 
 ## Contact
-- 🌐 [Website](jonas-nemeth.de)  
+- 🌐 [Website](https://nosperadu.github.io/photos/)  
 - 📸 [Instagram](https://instagram.com/jonas.bild)  
 - ✉️ photo@jonas-nemeth.de 
 
