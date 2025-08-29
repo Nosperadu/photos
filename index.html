@@ -87,6 +87,36 @@
     html, body, figure, header, main, footer { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
   </style>
 </head>
+<script>
+  (function() {
+    const KEY = 'theme';
+    const btn = document.getElementById('themeToggle');
+
+    function preferred() {
+      const saved = localStorage.getItem(KEY);
+      if (saved === 'light' || saved === 'dark') return saved;
+      return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+    function apply(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      // Icon anpassen: wenn dunkel aktiv → Sonne zeigen (zum Aufhellen), sonst Mond
+      if (btn) btn.textContent = (theme === 'dark') ? '☀️' : '🌙';
+    }
+
+    // Initial setzen
+    apply(preferred());
+
+    // Button-Click toggelt
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('data-theme') || preferred();
+        const next = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(KEY, next);
+        apply(next);
+      });
+    }
+  })();
+</script>
 <body>
   <a class="sr-only" href="#gallery">Skip to content</a>
 <header>
