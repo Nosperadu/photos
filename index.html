@@ -14,63 +14,79 @@
 
   <style>
     :root{
-      --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a; --card:#121212; --accent:#c5c5c5;
-      --gap:2rem; --maxw:1200px; --radius:16px; --shadow:0 8px 30px rgba(0,0,0,.35);
+      --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a;
+      --gap:2.5rem; --maxw:1200px;
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+    body{
+      margin:0; background:var(--bg); color:var(--fg);
+      font:400 16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+    }
     a{color:inherit;text-decoration:none}
 
-    header{max-width:var(--maxw);margin:24px auto;padding:0 20px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+    /* Header */
+    header{
+      max-width:var(--maxw); margin:32px auto; padding:0 20px;
+      display:flex; align-items:flex-end; justify-content:space-between;
+    }
     .brand{display:flex;flex-direction:column;gap:6px}
-    .title{font-size:clamp(22px,3vw,32px);font-weight:600;letter-spacing:.2px}
+    .title{font-size:clamp(24px,3.2vw,36px);font-weight:600;letter-spacing:.2px}
     .subtitle{color:var(--muted);font-size:14px}
-    .nav{display:flex;gap:10px;flex-wrap:wrap}
-    .pill{border:1px solid #242424;padding:6px 10px;border-radius:999px;background:#0f0f0f}
-
-    /* Theme button – eigene Klasse, NICHT .pill, damit Filter-JS ihn ignoriert */
+    .social a{font-size:14px;color:var(--muted);}
+    .social a:hover{color:var(--fg);}
     .btn-theme{
-      border:1px solid #333; padding:6px 12px; border-radius:999px; background:#0f0f0f; color:var(--fg); cursor:pointer;
+      border:none;background:transparent;color:var(--fg);
+      padding:4px;cursor:pointer;line-height:1;font-size:18px;
     }
-    .btn-theme:hover{ border-color:var(--fg); }
+    .btn-theme:hover{opacity:.8}
 
-    main{max-width:var(--maxw);margin:0 auto;padding:8px 20px 60px}
-
-    /* Masonry via CSS columns */
-    .gallery{ column-width:320px; column-gap:var(--gap); }
+    /* Gallery – ultra minimal */
+    main{max-width:var(--maxw);margin:0 auto;padding:0 20px 60px}
+    .gallery{column-width:320px;column-gap:var(--gap)}
     figure{
-      break-inside:avoid; border-radius:var(--radius); overflow:hidden; background:var(--card);
-      margin:0 0 var(--gap); box-shadow:var(--shadow); border:1px solid #1a1a1a;
+      break-inside:avoid; margin:0 0 var(--gap);
+      border:none; background:transparent; box-shadow:none;
     }
-    figure img{width:100%;height:auto;display:block}
-    figcaption{padding:10px 12px;color:var(--muted);font-size:13px;border-top:1px solid #1a1a1a}
+    figure img{width:100%;height:auto;display:block;border:none}
+    figcaption{
+      margin-top:.5rem; padding:0;
+      border:0; color:var(--muted); font-size:12px; letter-spacing:.02em;
+    }
 
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-
-    /* Lightbox */
-    .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;place-items:center;z-index:99}
+    /* Lightbox minimal */
+    .lightbox{
+      position:fixed;inset:0;background:rgba(0,0,0,.92);
+      display:none;place-items:center;z-index:99;
+    }
     .lightbox.open{display:grid}
-    .lightbox img{max-width:min(92vw,1600px);max-height:88vh;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.6)}
-    .lightbox .meta{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);color:#d0d0d0;font-size:14px;background:#0e0e0e;border:1px solid #242424;padding:6px 10px;border-radius:999px}
-    .close{position:fixed;top:14px;right:16px;border:none;background:#0e0e0e;border:1px solid #242424;color:#dcdcdc;padding:8px 12px;border-radius:999px;cursor:pointer}
-
-    footer{max-width:var(--maxw);margin:40px auto 60px;padding:0 20px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
-
-    @media (prefers-color-scheme:light){
-      :root{--bg:#fafafa;--fg:#0c0c0c;--muted:#5a5a5a;--card:#fff}
-      figure{border-color:#f0f0f0}
-      figcaption{border-top-color:#f0f0f0}
-      .pill{background:#fff;border-color:#e8e8e8}
-      .lightbox{background:rgba(255,255,255,.98)}
-      .close{background:#fff;border-color:#e8e8e8;color:#111}
+    .lightbox img{
+      max-width:min(92vw,1600px);max-height:88vh;
+      border:none;box-shadow:none;border-radius:0;
+    }
+    .lightbox .meta{
+      position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
+      color:#d0d0d0;font-size:14px;background:transparent;border:none;
+    }
+    .close{
+      position:fixed;top:14px;right:16px;
+      border:none;background:transparent;color:#dcdcdc;
+      padding:6px 10px;cursor:pointer;font-size:16px;
     }
 
-    /* Theme via data-theme überschreibt Variablen */
-    :root[data-theme="dark"] { --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a; --card:#121212; --accent:#c5c5c5; }
-    :root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; --card:#ffffff; --accent:#222222; }
+    /* Footer minimal */
+    footer{
+      max-width:var(--maxw);margin:40px auto 60px;padding:0 20px;
+      color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px
+    }
 
-    html, body, figure, header, main, footer { transition: background-color .2s ease, color .2s ease, border-color .2s ease; }
+    /* Theme overrides */
+    :root[data-theme="dark"] { --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a; }
+    :root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; }
+
+    html, body, figure, header, main, footer {
+      transition: background-color .25s ease, color .25s ease;
+    }
   </style>
 </head>
 <body>
@@ -82,13 +98,7 @@
       <div class="subtitle">Street · Architecture · Landscape</div>
     </div>
     <div class="social">
-      <a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">
-        <!-- Instagram Icon (SVG) -->
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="16" height="16" fill="currentColor" aria-hidden="true">
-          <path d="M224,202.66A53.34,53.34,0,1,0,277.34,256,53.38,53.38,0,0,0,224,202.66Zm124.71-41a54,54,0,0,0-30.27-30.27C293.91,123,224,123,224,123s-69.91,0-94.44,8.37a54,54,0,0,0-30.27,30.27C91,170.09,91,240,91,240s0,69.91,8.37,94.44a54,54,0,0,0,30.27,30.27C154.09,365,224,365,224,365s69.91,0,94.44-8.37a54,54,0,0,0,30.27-30.27C357,309.91,357,240,357,240S357,170.09,348.71,161.71ZM224,338a82,82,0,1,1,82-82A82,82,0,0,1,224,338Zm85.71-148.57a19.2,19.2,0,1,1,19.2-19.2A19.2,19.2,0,0,1,309.71,189.43Z"/>
-        </svg>
-        <span>@jonas.bild</span>
-      </a>
+      <a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a>
     </div>
     <div class="header-actions">
       <button id="themeToggle" class="btn-theme" aria-label="Toggle theme">🌙</button>
@@ -97,40 +107,19 @@
 
   <main>
     <section id="gallery" class="gallery">
-      <figure>
-        <img loading="lazy" src="images/IMG_5954.jpg" alt="Img 5954">
-        <figcaption>Img 5954</figcaption>
-      </figure>
-      <figure>
-        <img loading="lazy" src="images/IMG_7114.jpg" alt="Img 7114">
-        <figcaption>Img 7114</figcaption>
-      </figure>
-      <figure>
-        <img loading="lazy" src="images/IMG_7237.jpg" alt="Img 7237">
-        <figcaption>Img 7237</figcaption>
-      </figure>
-      <figure>
-        <img loading="lazy" src="images/IMG_7293.jpg" alt="Img 7293">
-        <figcaption>Img 7293</figcaption>
-      </figure>
-      <figure>
-        <img loading="lazy" src="images/IMG_7657.jpg" alt="Img 7657">
-        <figcaption>Img 7657</figcaption>
-      </figure>
-      <figure>
-        <img loading="lazy" src="images/IMG_7666.jpg" alt="Img 7666">
-        <figcaption>Img 7666</figcaption>
-      </figure>
-      <figure>
-        <img loading="lazy" src="images/IMG_7670.jpg" alt="Img 7670">
-        <figcaption>Img 7670</figcaption>
-      </figure>
+      <figure><img loading="lazy" src="images/IMG_5954.jpg" alt="Img 5954"><figcaption>Img 5954</figcaption></figure>
+      <figure><img loading="lazy" src="images/IMG_7114.jpg" alt="Img 7114"><figcaption>Img 7114</figcaption></figure>
+      <figure><img loading="lazy" src="images/IMG_7237.jpg" alt="Img 7237"><figcaption>Img 7237</figcaption></figure>
+      <figure><img loading="lazy" src="images/IMG_7293.jpg" alt="Img 7293"><figcaption>Img 7293</figcaption></figure>
+      <figure><img loading="lazy" src="images/IMG_7657.jpg" alt="Img 7657"><figcaption>Img 7657</figcaption></figure>
+      <figure><img loading="lazy" src="images/IMG_7666.jpg" alt="Img 7666"><figcaption>Img 7666</figcaption></figure>
+      <figure><img loading="lazy" src="images/IMG_7670.jpg" alt="Img 7670"><figcaption>Img 7670</figcaption></figure>
     </section>
   </main>
 
-  <!-- Lightbox overlay -->
+  <!-- Lightbox -->
   <div class="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
-    <button class="close" aria-label="Close">Close ✕</button>
+    <button class="close" aria-label="Close">✕</button>
     <img alt="Expanded view" />
     <div class="meta"></div>
   </div>
@@ -140,73 +129,43 @@
     <div><a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a></div>
   </footer>
 
-  <!-- JS am Ende, damit DOM fertig ist -->
   <script>
-    // Year
+    // Jahr
     document.getElementById('y').textContent = new Date().getFullYear();
 
-    // Filter nur auf echte Filter-Pills anwenden (Theme-Button wird ignoriert)
-    const pills = document.querySelectorAll('.pill[data-filter]');
-    const figs = Array.from(document.querySelectorAll('figure'));
-    pills.forEach(b => b.addEventListener('click', () => {
-      const tag = b.dataset.filter;
-      pills.forEach(p => p.classList.remove('active'));
-      b.classList.add('active');
-      figs.forEach(f => {
-        const show = tag === 'all' || (f.dataset.tags || '').includes(tag);
-        f.style.display = show ? '' : 'none';
-      });
-    }));
-
     // Lightbox
-    const lb = document.querySelector('.lightbox');
-    const lbImg = lb.querySelector('img');
-    const lbMeta = lb.querySelector('.meta');
-    const closeBtn = lb.querySelector('.close');
-
-    document.getElementById('gallery').addEventListener('click', (e) => {
-      const img = e.target.closest('img');
-      if (!img) return;
-      const full = img.dataset.full || img.src;
-      lbImg.src = full;
-      const cap = img.closest('figure').querySelector('figcaption')?.textContent?.trim() || '';
-      lbMeta.textContent = cap;
-      lb.classList.add('open');
-      document.body.style.overflow = 'hidden';
+    const lb=document.querySelector('.lightbox');
+    const lbImg=lb.querySelector('img');
+    const lbMeta=lb.querySelector('.meta');
+    const closeBtn=lb.querySelector('.close');
+    document.getElementById('gallery').addEventListener('click',e=>{
+      const img=e.target.closest('img'); if(!img) return;
+      lbImg.src=img.dataset.full||img.src;
+      lbMeta.textContent=img.closest('figure').querySelector('figcaption')?.textContent.trim()||'';
+      lb.classList.add('open'); document.body.style.overflow='hidden';
     });
+    function closeLB(){ lb.classList.remove('open'); document.body.style.overflow=''; lbImg.src=''; }
+    closeBtn.addEventListener('click',closeLB);
+    lb.addEventListener('click',e=>{if(e.target===lb) closeLB();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape') closeLB();});
 
-    function closeLB() {
-      lb.classList.remove('open');
-      document.body.style.overflow = '';
-      lbImg.src = '';
-    }
-    closeBtn.addEventListener('click', closeLB);
-    lb.addEventListener('click', (e) => { if (e.target === lb) closeLB(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLB(); });
-
-    // Theme-Toggle (läuft jetzt sicher, Button existiert)
-    (function () {
-      const KEY = 'theme';
-      const btn = document.getElementById('themeToggle');
-
-      function preferred() {
-        const saved = localStorage.getItem(KEY);
-        if (saved === 'light' || saved === 'dark') return saved;
-        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-        }
-      function apply(theme) {
-        document.documentElement.setAttribute('data-theme', theme);
-        btn.textContent = (theme === 'dark') ? '☀️' : '🌙';
+    // Theme Toggle
+    (function(){
+      const KEY='theme'; const btn=document.getElementById('themeToggle');
+      function preferred(){
+        const saved=localStorage.getItem(KEY);
+        if(saved==='light'||saved==='dark') return saved;
+        return window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
       }
-
-      const initial = preferred();
-      apply(initial);
-
-      btn.addEventListener('click', () => {
-        const current = document.documentElement.getAttribute('data-theme') || initial;
-        const next = current === 'dark' ? 'light' : 'dark';
-        localStorage.setItem(KEY, next);
-        apply(next);
+      function apply(theme){
+        document.documentElement.setAttribute('data-theme',theme);
+        btn.textContent=(theme==='dark')?'☀️':'🌙';
+      }
+      const initial=preferred(); apply(initial);
+      btn.addEventListener('click',()=>{
+        const current=document.documentElement.getAttribute('data-theme')||initial;
+        const next=current==='dark'?'light':'dark';
+        localStorage.setItem(KEY,next); apply(next);
       });
     })();
   </script>
