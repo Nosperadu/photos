@@ -4,108 +4,113 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jonas Németh — Photo Library</title>
-  <meta name="description" content="Minimal, fast, and responsive photo library by Jonas Nemeth." />
+  <meta name="description" content="Editorial photography by Jonas Németh — Street, Architecture, Landscape." />
+  <link rel="canonical" href="https://jonas-nemeth.de/">
   <meta name="color-scheme" content="dark light" />
-  <meta property="og:title" content="Jonas Németh — Photo Library" />
-  <meta property="og:description" content="Selected works: street, architecture, landscape." />
-  <meta property="og:type" content="website" />
-  <meta name="robots" content="index,follow" />
-  <link rel="icon" href="favicon.ico" />
+
+  <!-- Fonts: Serif (masthead) + Sans (copy) -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
       --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a;
-      --gap:2.5rem; --maxw:1200px;
+      --grid-gap:2.4rem; --grid-min:320px; --maxw:1200px;
+      --hair:#2a2a2a;
     }
+    :root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; --hair:#e6e6e6; }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
       margin:0; background:var(--bg); color:var(--fg);
-      font:400 16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      font:400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
     }
     a{color:inherit;text-decoration:none}
 
-    /* Header */
-    header{
-      max-width:var(--maxw); margin:32px auto; padding:0 20px;
-      display:flex; align-items:flex-end; justify-content:space-between;
+    /* ========== MASTHEAD (Vogue-ish) ========== */
+    .masthead{
+      max-width:var(--maxw); margin:48px auto 24px; padding:0 24px;
+      display:grid; grid-template-columns: 1fr auto; align-items:end; gap:1rem;
     }
-    .brand{display:flex;flex-direction:column;gap:6px}
-    .title{font-size:clamp(24px,3.2vw,36px);font-weight:600;letter-spacing:.2px}
-    .subtitle{color:var(--muted);font-size:14px}
-    .social a{font-size:14px;color:var(--muted);}
-    .social a:hover{color:var(--fg);}
+    .mast-title{
+      font-family:"Playfair Display", Georgia, serif;
+      font-weight:700; letter-spacing:.02em;
+      font-size:clamp(40px,7vw,72px); line-height:1.05;
+    }
+    .mast-sub{
+      margin-top:8px; color:var(--muted);
+      text-transform:uppercase; letter-spacing:.18em; font-size:12px;
+    }
+    .mast-aside{
+      display:flex; align-items:center; gap:16px;
+    }
+    .social a{ color:var(--muted); font-weight:600; }
+    .social a:hover{ color:var(--fg); }
     .btn-theme{
-      border:none;background:transparent;color:var(--fg);
-      padding:4px;cursor:pointer;line-height:1;font-size:18px;
+      border:none; background:transparent; color:var(--fg); cursor:pointer;
+      font-size:18px; line-height:1; padding:6px; border-radius:8px;
     }
-    .btn-theme:hover{opacity:.8}
+    .btn-theme:hover{ opacity:.85; }
 
-    /* Gallery – ultra minimal */
-    main{max-width:var(--maxw);margin:0 auto;padding:0 20px 60px}
-    .gallery{column-width:320px;column-gap:var(--gap)}
-    figure{
-      break-inside:avoid; margin:0 0 var(--gap);
-      border:none; background:transparent; box-shadow:none;
+    /* Hairline under masthead */
+    .rule{
+      max-width:var(--maxw); margin:16px auto 32px; padding:0 24px;
     }
-    figure img{width:100%;height:auto;display:block;border:none}
+    .rule .line{ height:1px; background:var(--hair); }
+
+    /* ========== GALLERY (GRID) ========== */
+    .container{ max-width:var(--maxw); margin:0 auto; padding:0 24px 72px; }
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(var(--grid-min), 1fr));
+      gap:var(--grid-gap);
+    }
+    figure{ margin:0; }
+    figure img{ width:100%; height:auto; display:block; border:none; border-radius:0; }
     figcaption{
-      margin-top:.5rem; padding:0;
-      border:0; color:var(--muted); font-size:12px; letter-spacing:.02em;
+      margin-top:.6rem; color:var(--muted);
+      font-size:12px; letter-spacing:.12em; text-transform:uppercase;
     }
 
-    /* Lightbox minimal */
-    .lightbox{
-      position:fixed;inset:0;background:rgba(0,0,0,.92);
-      display:none;place-items:center;z-index:99;
-    }
-    .lightbox.open{display:grid}
-    .lightbox img{
-      max-width:min(92vw,1600px);max-height:88vh;
-      border:none;box-shadow:none;border-radius:0;
-    }
+    /* ========== LIGHTBOX (minimal) ========== */
+    .lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.94); display:none; place-items:center; z-index:99; }
+    .lightbox.open{ display:grid; }
+    .lightbox img{ max-width:min(92vw,1600px); max-height:88vh; border:none; }
     .lightbox .meta{
-      position:fixed;left:50%;bottom:24px;transform:translateX(-50%);
-      color:#d0d0d0;font-size:14px;background:transparent;border:none;
+      position:fixed; left:50%; bottom:28px; transform:translateX(-50%);
+      color:#d0d0d0; font-size:13px; letter-spacing:.12em; text-transform:uppercase;
     }
     .close{
-      position:fixed;top:14px;right:16px;
-      border:none;background:transparent;color:#dcdcdc;
-      padding:6px 10px;cursor:pointer;font-size:16px;
+      position:fixed; top:14px; right:16px; border:none; background:transparent; color:#dcdcdc;
+      padding:6px 10px; cursor:pointer; font-size:16px;
     }
 
-    /* Footer minimal */
+    /* ========== FOOTER ========== */
     footer{
-      max-width:var(--maxw);margin:40px auto 60px;padding:0 20px;
-      color:var(--muted);font-size:13px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px
+      max-width:var(--maxw); margin:40px auto 60px; padding:0 24px;
+      color:var(--muted); font-size:13px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
     }
 
-    /* Theme overrides */
-    :root[data-theme="dark"] { --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a; }
-    :root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; }
-
-    html, body, figure, header, main, footer {
-      transition: background-color .25s ease, color .25s ease;
-    }
+    /* Transitions */
+    html, body, .masthead, .container, footer, figure, figcaption { transition: background-color .25s ease, color .25s ease; }
   </style>
 </head>
 <body>
-  <a class="sr-only" href="#gallery">Skip to content</a>
-
-  <header>
-    <div class="brand">
-      <div class="title">Jonas Nemeth</div>
-      <div class="subtitle">Street · Architecture · Landscape</div>
+  <!-- Masthead -->
+  <header class="masthead">
+    <div>
+      <div class="mast-title">Jonas Németh</div>
+      <div class="mast-sub">Street • Architecture • Landscape</div>
     </div>
-    <div class="social">
-      <a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a>
-    </div>
-    <div class="header-actions">
+    <div class="mast-aside">
+      <div class="social"><a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a></div>
       <button id="themeToggle" class="btn-theme" aria-label="Toggle theme">🌙</button>
     </div>
   </header>
+  <div class="rule"><div class="line"></div></div>
 
-  <main>
+  <!-- Gallery -->
+  <main class="container">
     <section id="gallery" class="gallery">
       <figure><img loading="lazy" src="images/IMG_5954.jpg" alt="Img 5954"><figcaption>Img 5954</figcaption></figure>
       <figure><img loading="lazy" src="images/IMG_7114.jpg" alt="Img 7114"><figcaption>Img 7114</figcaption></figure>
@@ -124,13 +129,14 @@
     <div class="meta"></div>
   </div>
 
+  <!-- Footer -->
   <footer>
-    <div>© <span id="y"></span> Jonas Nemeth</div>
+    <div>© <span id="y"></span> Jonas Németh</div>
     <div><a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a></div>
   </footer>
 
   <script>
-    // Jahr
+    // Year
     document.getElementById('y').textContent = new Date().getFullYear();
 
     // Lightbox
@@ -146,8 +152,8 @@
     });
     function closeLB(){ lb.classList.remove('open'); document.body.style.overflow=''; lbImg.src=''; }
     closeBtn.addEventListener('click',closeLB);
-    lb.addEventListener('click',e=>{if(e.target===lb) closeLB();});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape') closeLB();});
+    lb.addEventListener('click',e=>{ if(e.target===lb) closeLB(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLB(); });
 
     // Theme Toggle
     (function(){
