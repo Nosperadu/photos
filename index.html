@@ -13,8 +13,7 @@
     :root{
       --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a;
       --hair:#2a2a2a; --maxw:1200px;
-      --gap:20px;                 /* Grundabstand */
-      --col: 1fr;                 /* Fallback */
+      --gap:36px;                 /* Mehr Abstand zwischen Kacheln */
     }
     :root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; --hair:#e6e6e6; }
 
@@ -27,7 +26,7 @@
     }
     a{color:inherit; text-decoration:none}
 
-    /* ====== MASTHEAD (magazine) ====== */
+    /* ====== MASTHEAD ====== */
     .mast{
       max-width:var(--maxw); margin:48px auto 8px; padding:0 24px;
       display:grid; grid-template-columns: 1fr auto; align-items:end; gap:16px;
@@ -45,45 +44,48 @@
     .aside a{color:var(--muted); font-weight:600}
     .aside a:hover{color:var(--fg)}
     .toggle{border:none; background:transparent; color:var(--fg); font-size:18px; cursor:pointer}
+
     .rule{max-width:var(--maxw); margin:16px auto 28px; padding:0 24px}
     .rule .line{height:1px; background:var(--hair)}
 
-    /* ====== SHOWCASE (creative grid) ====== */
+    /* ====== GRID (art-directed) ====== */
     .wrap{max-width:var(--maxw); margin:0 auto 80px; padding:0 24px}
     .grid{
       display:grid;
-      grid-template-columns: repeat(12, 1fr);   /* 12-Spalten-Grid für Art Direction */
+      grid-template-columns: repeat(12, 1fr);
       gap: var(--gap);
-      grid-auto-flow: dense;                    /* füllt Lücken smart */
+      grid-auto-flow: dense; /* füllt Lücken smart */
     }
 
-    /* Artikel (Tiles) */
-    figure{margin:0; position:relative}
+    /* Tile-Grundlagen */
+    figure{ margin:0; }
     figure img{
-      width:100%; height:100%; display:block; object-fit:cover; border:none; border-radius:0;
+      width:100%; height:100%;
+      display:block; object-fit:cover; border:none; border-radius:0;
     }
     figcaption{
-      position:absolute; left:12px; bottom:12px;
-      color:rgba(255,255,255,.85); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
-      backdrop-filter: blur(0px);
+      margin-top:0.6rem;
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    /* Tile-Formate (Aspect Ratios) */
-    .sq   { aspect-ratio: 1 / 1;     }
-    .land { aspect-ratio: 3 / 2;     }
-    .wide { aspect-ratio: 16 / 9;    }
-    .port { aspect-ratio: 2 / 3;     }
-    .tall { aspect-ratio: 9 / 16;    }
+    /* Aspect-Ratio-Formate */
+    .sq   { aspect-ratio: 1 / 1;   }
+    .land { aspect-ratio: 3 / 2;   }
+    .wide { aspect-ratio: 16 / 9;  }
+    .port { aspect-ratio: 2 / 3;   }
+    .tall { aspect-ratio: 9 / 16;  }
 
-    /* Spalten-/Reihenspannen für Rhythmus */
-    /* Default: 12 Spalten → mobile skaliert von selbst; unten Breakpoints */
-    .span-6 { grid-column: span 6; }
-    .span-8 { grid-column: span 8; }
+    /* Spalten-Spans (12-Spalten-Grid) */
     .span-12{ grid-column: span 12; }
-    .span-4 { grid-column: span 4; }
-    .span-3 { grid-column: span 3; }
+    .span-8 { grid-column: span 8;  }
+    .span-6 { grid-column: span 6;  }
+    .span-4 { grid-column: span 4;  }
+    .span-3 { grid-column: span 3;  }
 
-    /* Kleine „Editorial“-Hover-Note (optional, minimal) */
+    /* Hover minimal */
     figure:hover figcaption{ text-decoration: underline; text-decoration-thickness:1px; }
 
     /* ====== LIGHTBOX ====== */
@@ -105,7 +107,7 @@
       color:var(--muted); font-size:13px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
     }
 
-    /* ====== RESPONSIVE ====== */
+    /* Responsive */
     @media (max-width: 1100px){
       .span-12{ grid-column: span 12; }
       .span-8 { grid-column: span 12; }
@@ -115,7 +117,7 @@
     }
     @media (max-width: 640px){
       .span-4, .span-3 { grid-column: span 12; }
-      figcaption{ font-size:11px; left:10px; bottom:10px; }
+      figcaption{ font-size:11px; }
     }
 
     /* Smooth theme transition */
@@ -136,7 +138,7 @@
   </header>
   <div class="rule"><div class="line"></div></div>
 
-  <!-- SHOWCASE GRID (art-directed) -->
+  <!-- SHOWCASE GRID -->
   <main class="wrap">
     <section id="gallery" class="grid">
       <!-- HERO WIDE -->
@@ -145,7 +147,7 @@
         <figcaption>Series — City Edge</figcaption>
       </figure>
 
-      <!-- TWO-UP (breites + quadratisch) -->
+      <!-- TWO-UP -->
       <figure class="land span-8">
         <img src="images/IMG_7293.jpg" alt="Img 7293">
         <figcaption>Architecture</figcaption>
@@ -155,7 +157,7 @@
         <figcaption>Street</figcaption>
       </figure>
 
-      <!-- TRIPTYCH (drei gleichbreite) -->
+      <!-- TRIPTYCH -->
       <figure class="port span-4">
         <img src="images/IMG_5954.jpg" alt="Img 5954">
         <figcaption>Portrait of a Corner</figcaption>
@@ -169,7 +171,7 @@
         <figcaption>Concrete Calm</figcaption>
       </figure>
 
-      <!-- FEATURE TALL + FILLERS (dense pack) -->
+      <!-- FEATURE TALL + FILLERS -->
       <figure class="tall span-3">
         <img src="images/IMG_7670.jpg" alt="Img 7670">
         <figcaption>Vertical Silence</figcaption>
@@ -182,8 +184,6 @@
         <img src="images/IMG_7293.jpg" alt="Img 7293 wide">
         <figcaption>Structure & Space</figcaption>
       </figure>
-
-      <!-- Weitere Reihen: dupliziere das Muster (HERO → TWO-UP → TRIPTYCH → TALL+FILL) -->
     </section>
   </main>
 
@@ -201,7 +201,7 @@
   </footer>
 
   <script>
-    // Year
+    // Jahr
     document.getElementById('y').textContent = new Date().getFullYear();
 
     // Lightbox
