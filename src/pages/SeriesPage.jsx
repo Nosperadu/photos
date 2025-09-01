@@ -13,35 +13,38 @@ export default function SeriesPage() {
   const items = useMemo(() => current?.images ?? [], [current]);
 
   // =============================
-  // REVEAL-EFFEKT (nur hier; sichtbar bis JS ready ist)
+  // REVEAL (nur hier, sichtbar bis ready)
   // =============================
   const sectionRef = useRef(null);
-
   useEffect(() => {
     if (!sectionRef.current) return;
-    // Nach Mount: "reveal-ready" setzen → erst dann werden die Figuren voranimiert
     const t = setTimeout(() => sectionRef.current.classList.add("reveal-ready"), 0);
     return () => clearTimeout(t);
   }, []);
-
-  // IntersectionObserver nur für diese Seite aktivieren
   useReveal(".reveal-scope figure");
 
   // =============================
-  // DYNAMISCHE SPALTENBREITEN (Grid)
+  // GRID-SPANNEN (sichtbarer, großzügiger)
   // =============================
   const [spanClasses, setSpanClasses] = useState(() =>
-    Array(items.length).fill("span-6") // Startwert
+    Array(items.length).fill("span-6")
   );
+
+  function bumpForWideScreens(cls) {
+    // Auf großen Screens (>= 1360px) eine Stufe größer machen
+    if (typeof window !== "undefined" && window.innerWidth >= 1360) {
+      if (cls === "span-6") return "span-8";
+      if (cls === "span-8") return "span-10";
+    }
+    return cls;
+  }
 
   function handleMeasured(i, w, h) {
     if (!w || !h) return;
     const r = w / h; // aspect ratio
 
-    // Großzügigere Heuristik (weniger zu kleine Kacheln):
-    //  >2.1 → 12  | >1.6 → 10 | >1.33 → 8
-    //  0.9–1.33 → 8 (Quadrate & leichte Portraits größer als früher)
-    //  0.75–0.9 → 6 | <0.75 → 4 (selten)
+    // Großzügige Basiskurve:
+    // >2.1 → 12 | >1.6 → 10 | >1.33 → 8 | 0.9–1.33 → 8 | 0.75–0.9 → 6 | <0.75 → 4
     let cls =
       r > 2.1 ? "span-12" :
       r > 1.6 ? "span-10" :
@@ -50,17 +53,21 @@ export default function SeriesPage() {
       r >= 0.75 ? "span-6" :
       "span-4";
 
-    // Optional: „Notbremse“, wenn du niemals span-4 willst:
-    // if (cls === "span-4") cls = "span-6";
+    // Notbremse: nie mikrig
+    if (cls === "span-4") cls = "span-6";
 
-    // Optionales Tuning via Flag (falls du wieder feiner justieren willst)
+    // Optionale Feinkurve deaktivierbar über Flag
     if (!UI_FLAGS.RATIO_TWEAKS) {
       cls =
         r > 2.2 ? "span-12" :
         r > 1.6 ? "span-10" :
         r > 1.3 ? "span-8"  :
         r < 0.85 ? "span-4" : "span-6";
+      if (cls === "span-4") cls = "span-6";
     }
+
+    // Auf großen Screens noch einmal „hochstufen“
+    cls = bumpForWideScreens(cls);
 
     setSpanClasses(prev => {
       const next = [...prev];
@@ -76,25 +83,21 @@ export default function SeriesPage() {
   const [idx, setIdx] = useState(0);
 
   // =============================
-  // OFFSETS (Whitespace; nur bei großen Kacheln anwenden)
+  // OFFSETS (Whitespace; nur bei großen Kacheln)
   // =============================
-  const OFFSETS_ENABLED = true; // auf false setzen → komplett aus
+  const OFFSETS_ENABLED = true; // bei Bedarf auf false
 
   function offsetClassFor(i, img, span) {
     if (!OFFSETS_ENABLED) return "";
-    // Nur große Kacheln versetzen, sonst wirken kleine noch kleiner
     const isBig = span === "span-8" || span === "span-10" || span === "span-12";
     if (!isBig) return "";
-
     const lower = (img?.src || "").toLowerCase();
-    if (lower.includes("-pano")) return ""; // Panos meist already heroisch
-
-    // Beispiel: jede 3. große Kachel leicht versetzen
+    if (lower.includes("-pano")) return ""; // Panos nicht versetzen
     return (i % 3 === 2) ? "offset-2" : "";
   }
 
   // =============================
-  // HERO-BILD (optional Full-Bleed oben; Dateiname enthält "-hero")
+  // HERO-BILD (optional per Flag, Dateiname enthält "-hero")
   // =============================
   const heroIdx = UI_FLAGS.HERO
     ? items.findIndex(it => it.src.toLowerCase().includes("-hero"))
@@ -123,12 +126,10 @@ export default function SeriesPage() {
         <Link to="/" className="backlink">← Zurück</Link>
         <h2 className="series-title">{current.title}</h2>
 
-        {/* optionales Section-Label */}
         {UI_FLAGS.SECTION_LABEL && (
           <div className="section-label">Selected Works</div>
         )}
 
-        {/* Hero-Bild (wenn Flag aktiv und vorhanden) */}
         {hero && (
           <figure
             className="hero"
@@ -140,7 +141,6 @@ export default function SeriesPage() {
           </figure>
         )}
 
-        {/* Galerie */}
         <section className="grid reveal-scope" ref={sectionRef}>
           {items.map((img, i) => {
             if (i === heroIdx) return null; // Hero nicht doppelt
@@ -170,7 +170,6 @@ export default function SeriesPage() {
       </main>
       <Footer />
 
-      {/* Lightbox */}
       <Lightbox
         open={open}
         items={items}
