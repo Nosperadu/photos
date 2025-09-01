@@ -86,7 +86,34 @@ footer{max-width:var(--maxw);margin:40px auto 60px;padding:0 24px;color:var(--mu
 .theme-toggle button:hover {
   color: var(--fg);
 }
+.mast {
+  border-bottom: 1px solid var(--hair);
+  padding-bottom: 18px;
+  margin-bottom: 36px;
+}
+footer {
+  border-top: 1px solid var(--hair);
+  padding-top: 20px;
+}
+/* Offsets für Magazin-Whitespace (nur Desktop) */
+.offset-1 { grid-column-start: 2; }
+.offset-2 { grid-column-start: 3; }
+.offset-3 { grid-column-start: 4; }
 
+/* Auf kleinen Screens Offsets neutralisieren */
+@media (max-width: 1100px){
+  .offset-1, .offset-2, .offset-3 { grid-column-start: auto; }
+}
+
+/* Monospace-Caption für editorial Look */
+figcaption {
+  margin-top: .6rem;
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
 /* --- Responsive Spans --- */
 @media (max-width:1100px){
   .span-12,.span-10,.span-8,.span-6{grid-column:span 12}
