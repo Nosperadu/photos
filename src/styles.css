@@ -145,8 +145,14 @@ figcaption {
 }
 
 /* 5.4 Reveal-on-Scroll */
-.f-reveal .grid figure{ opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
-.f-reveal .grid figure.reveal-in{ opacity: 1; transform: none; }
+/* nachher: Reveal greift NUR in Containern mit .reveal-scope */
+.f-reveal .reveal-scope figure{
+  opacity: 0; transform: translateY(10px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.f-reveal .reveal-scope figure.reveal-in{
+  opacity: 1; transform: none;
+}
 
 /* 5.5 Hero (Full-bleed) */
 .f-hero .hero{
