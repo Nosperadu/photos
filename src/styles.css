@@ -123,3 +123,34 @@ figcaption {
   .span-4{grid-column:span 12}
   figcaption{font-size:11px}
 }
+
+/* 5.1 Hairlines (Header/Footer) */
+.f-hairlines .mast { border-bottom: 1px solid var(--hair); padding-bottom: 18px; margin-bottom: var(--gap); }
+.f-hairlines footer { border-top: 1px solid var(--hair); padding-top: 20px; }
+
+/* 5.2 Section Label */
+.f-section-label .section-label{
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 12px;
+}
+
+/* 5.3 Hover Microinteraction (dezenter Lift) */
+.f-hover figure img{
+  transition: transform .25s ease, filter .25s ease;
+  will-change: transform;
+}
+.f-hover figure:hover img{
+  transform: translateY(-2px);
+  filter: contrast(1.04);
+}
+
+/* 5.4 Reveal-on-Scroll */
+.f-reveal .grid figure{ opacity: 0; transform: translateY(10px); transition: opacity .5s ease, transform .5s ease; }
+.f-reveal .grid figure.reveal-in{ opacity: 1; transform: none; }
+
+/* 5.5 Hero (Full-bleed) */
+.f-hero .hero{
+  margin: 0 calc(50% - 50vw) clamp(24px,4vw,40px);
+}
+.f-hero .hero img{ width: 100vw; height: auto; display: block; }
+.f-hero .hero figcaption{ max-width: var(--maxw); margin: .6rem auto 0; padding: 0 24px; }

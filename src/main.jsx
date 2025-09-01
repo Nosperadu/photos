@@ -6,6 +6,8 @@ import Home from "./pages/Home.jsx";
 import SeriesPage from "./pages/SeriesPage.jsx";
 import "./styles.css";
 import Impressum from "./pages/Impressum.jsx";
+import { applyUiFlags } from "./applyUiFlags.js";
+applyUiFlags();
 
 createRoot(document.getElementById("root")).render(
   <HashRouter>
