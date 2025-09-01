@@ -146,12 +146,23 @@ figcaption {
 
 /* 5.4 Reveal-on-Scroll */
 /* nachher: Reveal greift NUR in Containern mit .reveal-scope */
+/* Sichtbar bis JS bereit ist */
 .f-reveal .reveal-scope figure{
-  opacity: 0; transform: translateY(10px);
+  opacity: 1;
+  transform: none;
   transition: opacity .5s ease, transform .5s ease;
 }
-.f-reveal .reveal-scope figure.reveal-in{
-  opacity: 1; transform: none;
+
+/* Erst wenn ready → voranimierter Zustand */
+.f-reveal .reveal-scope.reveal-ready figure{
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+/* Wenn intersected → einblenden */
+.f-reveal .reveal-scope.reveal-ready figure.reveal-in{
+  opacity: 1;
+  transform: none;
 }
 
 /* 5.5 Hero (Full-bleed) */

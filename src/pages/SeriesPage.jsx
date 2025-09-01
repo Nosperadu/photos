@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { series } from "../series.data.js";
 import Header from "../components/Header.jsx";
@@ -12,33 +12,34 @@ export default function SeriesPage() {
   const current = series.find((s) => s.id === id);
   const items = useMemo(() => current?.images ?? [], [current]);
 
-  // Reveal-on-scroll nur hier aktivieren (greift durch .reveal-scope)
+  // =============================
+  // REVEAL-EFFEKT (Bilder einblenden beim Scrollen)
+  // =============================
+  // .reveal-scope sorgt dafür, dass der Effekt nur hier greift.
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    // Erst nach Mount → Klasse "reveal-ready" hinzufügen
+    const t = setTimeout(() => sectionRef.current.classList.add("reveal-ready"), 0);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Hook aktiviert IntersectionObserver
   useReveal(".reveal-scope figure");
 
   // =============================
-  // Offsets (Whitespace) – optional
-  // =============================
-  const OFFSETS_ENABLED = true; // -> auf false setzen, um Offsets komplett zu deaktivieren
-  function offsetClassFor(i, img) {
-    if (!OFFSETS_ENABLED) return "";
-    const lower = (img?.src || "").toLowerCase();
-    if (lower.includes("-pano")) return "";    // Panos ohne Offset, meist schon groß
-    // Beispiel: jedes 3. Bild leicht versetzen
-    return (i % 3 === 2) ? "offset-2" : "";
-  }
-
-  // =============================
-  // Dynamische Spaltenbreiten
+  // SPALTENKLASSEN (Grid-Größen je nach Seitenverhältnis)
   // =============================
   const [spanClasses, setSpanClasses] = useState(() =>
-    Array(items.length).fill("span-6")
+    Array(items.length).fill("span-6") // Startwert
   );
 
   function handleMeasured(i, w, h) {
     if (!w || !h) return;
     const r = w / h; // aspect ratio
 
-    // Heuristik (mit optionalem Tuning per Flag)
+    // Standard-Heuristik + optional Tuning über Flag
     const cls = UI_FLAGS.RATIO_TWEAKS
       ? (r > 2.2 ? "span-12"
         : r > 1.7 ? "span-10"
@@ -49,7 +50,7 @@ export default function SeriesPage() {
         : r > 1.3 ? "span-8"
         : r < 0.85 ? "span-4" : "span-6");
 
-    setSpanClasses((prev) => {
+    setSpanClasses(prev => {
       const next = [...prev];
       next[i] = cls;
       return next;
@@ -57,11 +58,34 @@ export default function SeriesPage() {
   }
 
   // =============================
-  // Lightbox
+  // LIGHTBOX (Bild groß öffnen)
   // =============================
   const [open, setOpen] = useState(false);
   const [idx, setIdx] = useState(0);
 
+  // =============================
+  // OFFSETS (Whitespace im Grid, Magazin-Look)
+  // =============================
+  const OFFSETS_ENABLED = true; // auf false setzen → alle Bilder normal
+
+  function offsetClassFor(i, img) {
+    if (!OFFSETS_ENABLED) return "";
+    const lower = (img?.src || "").toLowerCase();
+    if (lower.includes("-pano")) return "";    // Panoramen nicht versetzen
+    return (i % 3 === 2) ? "offset-2" : "";    // Beispiel: jedes 3. Bild versetzt
+  }
+
+  // =============================
+  // HERO-BILD (optional Full-Bleed ganz oben)
+  // =============================
+  const heroIdx = UI_FLAGS.HERO
+    ? items.findIndex(it => it.src.toLowerCase().includes("-hero"))
+    : -1;
+  const hero = heroIdx >= 0 ? items[heroIdx] : null;
+
+  // =============================
+  // FALLBACK: Serie nicht gefunden
+  // =============================
   if (!current) {
     return (
       <main className="wrap" style={{ paddingTop: 24 }}>
@@ -71,12 +95,9 @@ export default function SeriesPage() {
     );
   }
 
-  // Optional: Hero (Full-bleed) – erstes Bild mit "-hero" im Namen
-  const heroIdx = UI_FLAGS.HERO
-    ? items.findIndex((it) => it.src.toLowerCase().includes("-hero"))
-    : -1;
-  const hero = heroIdx >= 0 ? items[heroIdx] : null;
-
+  // =============================
+  // RENDER
+  // =============================
   return (
     <div>
       <Header />
@@ -84,10 +105,12 @@ export default function SeriesPage() {
         <Link to="/" className="backlink">← Zurück</Link>
         <h2 className="series-title">{current.title}</h2>
 
+        {/* optionales Section-Label */}
         {UI_FLAGS.SECTION_LABEL && (
           <div className="section-label">Selected Works</div>
         )}
 
+        {/* Hero-Bild, wenn Flag aktiv und vorhanden */}
         {hero && (
           <figure
             className="hero"
@@ -99,9 +122,10 @@ export default function SeriesPage() {
           </figure>
         )}
 
-        <section className="grid reveal-scope">
+        {/* Galerie */}
+        <section className="grid reveal-scope" ref={sectionRef}>
           {items.map((img, i) => {
-            if (i === heroIdx) return null; // Hero nicht doppelt zeigen
+            if (i === heroIdx) return null; // Hero nicht doppelt
             const span = spanClasses[i];
             const offset = offsetClassFor(i, img);
             const classes = `${span} ${offset}`.trim();
@@ -112,7 +136,7 @@ export default function SeriesPage() {
                   src={img.src}
                   alt={img.title}
                   loading="lazy"
-                  onLoad={(e) => {
+                  onLoad={e => {
                     const el = e.currentTarget;
                     handleMeasured(i, el.naturalWidth, el.naturalHeight);
                   }}
@@ -126,9 +150,9 @@ export default function SeriesPage() {
           })}
         </section>
       </main>
-
       <Footer />
 
+      {/* Lightbox */}
       <Lightbox
         open={open}
         items={items}
