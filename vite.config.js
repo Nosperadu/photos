@@ -3,5 +3,5 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
-  base: '/', // bei Custom Domain so lassen
+  base: '/', // Bei Custom Domain (z.B. jonas-nemeth.de) unbedingt '/' lassen
 })
