@@ -170,3 +170,87 @@ figcaption {
 }
 .f-hero .hero img{ width: 100vw; height: auto; display: block; }
 .f-hero .hero figcaption{ max-width: var(--maxw); margin: .6rem auto 0; padding: 0 24px; }
+
+/* ==============================
+   Intro-Zeile (Design-Idee #2)
+   - erscheint unter dem Serientitel, wenn 'description' vorhanden
+   ============================== */
+.series-intro{
+  max-width: 50ch;
+  margin: .5rem 0 var(--gap);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
+  text-wrap: balance;
+}
+
+/* ==============================
+   Smooth Theme Transition (Design-Idee #3)
+   - weiche 0.28s-Transition bei Dark/Light Umschaltung
+   ============================== */
+html, body, header, main, footer,
+figure, figcaption, .wrap, .grid img, .section-label, .series-intro {
+  transition: background-color .28s ease, color .28s ease, border-color .28s ease, filter .28s ease;
+}
+
+/* ==============================
+   Next Series Navigation (Design-Idee #5)
+   - dezenter Trenner + Link zur nächsten Serie
+   ============================== */
+.series-next{
+  display:flex; align-items:baseline; gap:10px;
+  margin-top: calc(var(--gap) + 4px);
+  border-top: 1px solid var(--hair);
+  padding-top: 16px;
+}
+.series-next__label{
+  font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted);
+}
+.series-next__link{
+  font-size: 16px; text-underline-offset: 3px;
+}
+.series-next__link:hover{ text-decoration: underline; }
+
+/* ==============================
+   Reveal-Effekt (scoped auf .reveal-scope)
+   - Bilder sind sichtbar, bis .reveal-ready gesetzt wird
+   - danach werden sie einzeln eingefadet
+   ============================== */
+.f-reveal .reveal-scope figure{
+  opacity: 1;
+  transform: none;
+  transition: opacity .5s ease, transform .5s ease;
+}
+.f-reveal .reveal-scope.reveal-ready figure{
+  opacity: 0;
+  transform: translateY(10px);
+}
+.f-reveal .reveal-scope.reveal-ready figure.reveal-in{
+  opacity: 1;
+  transform: none;
+}
+
+/* ==============================
+   (Optional) Hero Full-bleed
+   - nur sichtbar, wenn in ui.flags.js HERO: true
+   - figcaption wird wieder in die max Breite geführt
+   ============================== */
+.f-hero .hero{
+  margin: 0 calc(50% - 50vw) clamp(24px,4vw,40px);
+}
+.f-hero .hero img{ width: 100vw; height: auto; display: block; }
+.f-hero .hero figcaption{ max-width: var(--maxw); margin: .6rem auto 0; padding: 0 24px; }
+
+/* ==============================
+   Offsets (Whitespace)
+   - du hast bereits span-12/10/8/6/4 im Grid
+   - offsets verschieben Startspalte → schafft Magazin-Whitespace
+   ============================== */
+.offset-1 { grid-column-start: 2; }
+.offset-2 { grid-column-start: 3; }
+.offset-3 { grid-column-start: 4; }
+
+/* Auf kleineren Screens Offsets neutralisieren (keine krummen Lücken mobil) */
+@media (max-width: 1100px){
+  .offset-1, .offset-2, .offset-3 { grid-column-start: auto; }
+}
