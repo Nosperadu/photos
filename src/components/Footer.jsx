@@ -5,6 +5,7 @@ export default function Footer() {
     <footer>
       <div>© {new Date().getFullYear()} Jonas Németh</div>
       <div><a href="https://www.instagram.com/jonasnemeth_/" target="_blank" rel="noopener">@jonas.bild</a></div>
+      <a href="/#/impressum">Impressum</a>
     </footer>
   );
 }
