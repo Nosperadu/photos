@@ -40,41 +40,39 @@ export default function SeriesPage() {
   }
 
   function handleMeasured(i, w, h) {
-    if (!w || !h) return;
-    const r = w / h; // aspect ratio
+  if (!w || !h) return;
+  const r = w / h; // aspect ratio
 
-    // Großzügige Basiskurve:
-    // >2.1 → 12 | >1.6 → 10 | >1.33 → 8 | 0.9–1.33 → 8 | 0.75–0.9 → 6 | <0.75 → 4
-    let cls =
-      r > 2.1 ? "span-12" :
-      r > 1.6 ? "span-10" :
-      r > 1.33 ? "span-8"  :
-      r >= 0.9 ? "span-8"  :
-      r >= 0.75 ? "span-6" :
-      "span-4";
+  // Aggressiver für Breite:
+  // >1.90 → 12  | >1.50 → 10 | >1.20 → 8
+  // 0.90–1.20 → 8 | 0.75–0.90 → 6 | <0.75 → 6 (kein span-4 mehr)
+  let cls =
+    r > 1.90 ? "span-12" :
+    r > 1.50 ? "span-10" :
+    r > 1.20 ? "span-8"  :
+    r >= 0.90 ? "span-8" :
+    r >= 0.75 ? "span-6" :
+    "span-6";
 
-    // Notbremse: nie mikrig
-    if (cls === "span-4") cls = "span-6";
-
-    // Optionale Feinkurve deaktivierbar über Flag
-    if (!UI_FLAGS.RATIO_TWEAKS) {
-      cls =
-        r > 2.2 ? "span-12" :
-        r > 1.6 ? "span-10" :
-        r > 1.3 ? "span-8"  :
-        r < 0.85 ? "span-4" : "span-6";
-      if (cls === "span-4") cls = "span-6";
-    }
-
-    // Auf großen Screens noch einmal „hochstufen“
-    cls = bumpForWideScreens(cls);
-
-    setSpanClasses(prev => {
-      const next = [...prev];
-      next[i] = cls;
-      return next;
-    });
+  // Dateinamen-Hints (optional): -hero / -wide / -pano → immer sehr groß
+  // (passt du an, wenn du andere Suffixe nutzt)
+  const src = (items[i]?.src || "").toLowerCase();
+  if (src.includes("-hero") || src.includes("-wide") || src.includes("-pano")) {
+    cls = "span-12";
   }
+
+  // Dynamik: jedes 4. Bild eine Stufe größer (falls möglich)
+  if (i % 4 === 1) {
+    if (cls === "span-8") cls = "span-10";
+    else if (cls === "span-10") cls = "span-12";
+  }
+
+  setSpanClasses(prev => {
+    const next = [...prev];
+    next[i] = cls;
+    return next;
+  });
+}
 
   // =============================
   // LIGHTBOX
