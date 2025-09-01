@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jonas Németh — Photo Works</title>
+  <meta name="description" content="Editorial photography by Jonas Németh — Street, Architecture, Landscape." />
+  <link rel="canonical" href="https://jonas-nemeth.de/">
+  <meta name="color-scheme" content="dark light" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a;
+      --hair:#2a2a2a; --maxw:1200px;
+      --gap:36px;
+    }
+    :root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; --hair:#e6e6e6; }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--fg);
+      font:400 16px/1.6 Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    }
+    a{color:inherit; text-decoration:none}
+
+    /* ====== MASTHEAD ====== */
+    .mast{
+      max-width:var(--maxw); margin:48px auto 8px; padding:0 24px;
+      display:grid; grid-template-columns: 1fr auto; align-items:end; gap:16px;
+    }
+    .brand h1{
+      font-family:"Playfair Display", Georgia, serif;
+      font-weight:700; letter-spacing:.01em;
+      font-size:clamp(42px,7vw,78px); line-height:1.03; margin:0;
+    }
+    .brand .strap{
+      margin-top:10px; color:var(--muted);
+      text-transform:uppercase; letter-spacing:.18em; font-size:12px;
+    }
+    .mast .aside{display:flex; align-items:center; gap:18px}
+    .aside a{color:var(--muted); font-weight:600}
+    .aside a:hover{color:var(--fg)}
+    .toggle{border:none; background:transparent; color:var(--fg); font-size:18px; cursor:pointer}
+
+    .rule{max-width:var(--maxw); margin:16px auto 28px; padding:0 24px}
+    .rule .line{height:1px; background:var(--hair)}
+
+    /* ====== GRID (art-directed, natürliche Bildhöhen) ====== */
+    .wrap{max-width:var(--maxw); margin:0 auto 80px; padding:0 24px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: var(--gap);
+      grid-auto-flow: dense; /* füllt Lücken bestmöglich */
+    }
+
+    figure{ margin:0; }
+    figure img{
+      width:100%;
+      height:auto;           /* echtes Seitenverhältnis beibehalten */
+      display:block;
+      border:none; border-radius:0;
+    }
+    figcaption{
+      margin-top:0.6rem;
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    /* Spalten-Spans (12-Spalten-Grid) – Bildhöhen sind natürlich */
+    .span-12{ grid-column: span 12; }
+    .span-8 { grid-column: span 8;  }
+    .span-6 { grid-column: span 6;  }
+    .span-4 { grid-column: span 4;  }
+    .span-3 { grid-column: span 3;  }
+
+    /* ====== LIGHTBOX ====== */
+    .lightbox{ position:fixed; inset:0; background:rgba(0,0,0,.94); display:none; place-items:center; z-index:99; }
+    .lightbox.open{ display:grid; }
+    .lightbox img{ max-width:min(92vw,1600px); max-height:88vh; border:none; }
+    .lightbox .meta{
+      position:fixed; left:50%; bottom:28px; transform:translateX(-50%);
+      color:#d0d0d0; font-size:13px; letter-spacing:.12em; text-transform:uppercase;
+    }
+    .close{
+      position:fixed; top:14px; right:16px; border:none; background:transparent; color:#dcdcdc;
+      padding:6px 10px; cursor:pointer; font-size:16px;
+    }
+
+    /* ====== FOOTER ====== */
+    footer{
+      max-width:var(--maxw); margin:40px auto 60px; padding:0 24px;
+      color:var(--muted); font-size:13px; display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px){
+      .span-12{ grid-column: span 12; }
+      .span-8 { grid-column: span 12; }
+      .span-6 { grid-column: span 12; }
+      .span-4 { grid-column: span 6;  }
+      .span-3 { grid-column: span 6;  }
+    }
+    @media (max-width: 640px){
+      .span-4, .span-3 { grid-column: span 12; }
+      figcaption{ font-size:11px; }
+    }
+
+    html, body, .mast, .wrap, footer { transition: background-color .25s ease, color .25s ease; }
+  </style>
+</head>
+<body>
+  <!-- MASTHEAD -->
+  <header class="mast">
+    <div class="brand">
+      <h1>Jonas Németh</h1>
+      <div class="strap">Street • Architecture • Landscape</div>
+    </div>
+    <div class="aside">
+      <a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">@jonas.bild</a>
+      <button id="themeToggle" class="toggle" aria-label="Theme umschalten">🌙</button>
+    </div>
+  </header>
+  <div class="rule"><div class="line"></div></div>
+
+  <!-- SHOWCASE GRID -->
+  <main class="wrap">
+    <section id="gallery" class="grid">
+      <!-- HERO (volle Breite) -->
+      <figure class="span-12">
+        <img src="images/IMG_7237.jpg" alt="Img 7237">
+        <figcaption>Series — City Edge</figcaption>
+      </figure>
+
+      <!-- Two-up -->
+      <figure class="span-8">
+        <img src="images/IMG_7293.jpg" alt="Img 7293">
+        <figcaption>Architecture</figcaption>
+      </figure>
+      <figure class="span-4">
+        <img src="images/IMG_7114.jpg" alt="Img 7114">
+        <figcaption>Street</figcaption>
+      </figure>
+
+      <!-- Triptych -->
+      <figure class="span-4">
+        <img src="images/IMG_5954.jpg" alt="Img 5954">
+        <figcaption>Portrait of a Corner</figcaption>
+      </figure>
+      <figure class="span-4">
+        <img src="images/IMG_7657.jpg" alt="Img 7657">
+        <figcaption>Lines</figcaption>
+      </figure>
+      <figure class="span-4">
+        <img src="images/IMG_7666.jpg" alt="Img 7666">
+        <figcaption>Concrete Calm</figcaption>
+      </figure>
+
+      <!-- Feature + Filler (einzigartige Motive; Duplikat entfernt) -->
+      <figure class="span-6">
+        <img src="images/IMG_7670.jpg" alt="Img 7670">
+        <figcaption>Vertical Silence</figcaption>
+      </figure>
+      <!-- Wenn du ein weiteres Motiv hast, füge hier z.B. eine span-6 Kachel dazu -->
+      <!-- <figure class="span-6"><img src="images/DEIN_BILD.jpg" alt="Titel"><figcaption>Caption</figcaption></figure> -->
+    </section>
+  </main>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button class="close" aria-label="Schließen">✕</button>
+    <img alt="Expanded view" />
+    <div class="meta"></div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>© <span id="y"></span> Jonas Németh</div>
+    <div><a href="https://www.instagram.com/jonasnemeth_/" target="_blank" rel="noopener">@jonasnemeth_</a></div>
+  </footer>
+
+  <script>
+    // Jahr
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Lightbox
+    const lb=document.querySelector('.lightbox');
+    const lbImg=lb.querySelector('img');
+    const lbMeta=lb.querySelector('.meta');
+    const closeBtn=lb.querySelector('.close');
+    document.getElementById('gallery').addEventListener('click',e=>{
+      const img=e.target.closest('img'); if(!img) return;
+      lbImg.src=img.dataset.full||img.src;
+      lbMeta.textContent=img.closest('figure').querySelector('figcaption')?.textContent.trim()||'';
+      lb.classList.add('open'); document.body.style.overflow='hidden';
+    });
+    function closeLB(){ lb.classList.remove('open'); document.body.style.overflow=''; lbImg.src=''; }
+    closeBtn.addEventListener('click',closeLB);
+    lb.addEventListener('click',e=>{ if(e.target===lb) closeLB(); });
+    document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeLB(); });
+
+    // Theme toggle
+    (function(){
+      const KEY='theme'; const btn=document.getElementById('themeToggle');
+      function preferred(){
+        const saved=localStorage.getItem(KEY);
+        if(saved==='light'||saved==='dark') return saved;
+        return window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';
+      }
+      function apply(theme){
+        document.documentElement.setAttribute('data-theme',theme);
+        btn.textContent=(theme==='dark')?'☀️':'🌙';
+      }
+      const initial=preferred(); apply(initial);
+      btn.addEventListener('click',()=>{
+        const current=document.documentElement.getAttribute('data-theme')||initial;
+        const next=current==='dark'?'light':'dark';
+        localStorage.setItem(KEY,next); apply(next);
+      });
+    })();
+  </script>
+</body>
+</html>
