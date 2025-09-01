@@ -14,7 +14,7 @@ export default function SeriesPage() {
   // CONFIG: Offsets (Whitespace)
   // =============================
   // Global an/aus:
-  const OFFSETS_ENABLED = true;
+  const OFFSETS_ENABLED = false;
 
   // Definiere hier deine Versatz-Logik:
   // - Beispiel A: jedes 3. Bild (Index 2, 5, 8, …) bekommt offset-2
