@@ -12,33 +12,39 @@ export default function SeriesPage() {
   const current = series.find((s) => s.id === id);
   const items = useMemo(() => current?.images ?? [], [current]);
 
-  // ========= REVEAL: sichtbar bis JS ready =========
+  // =============================
+  // REVEAL-EFFEKT (nur hier; sichtbar bis JS ready ist)
+  // =============================
   const sectionRef = useRef(null);
   useEffect(() => {
     if (!sectionRef.current) return;
+    // Erst nach Mount → Klasse "reveal-ready" hinzufügen
     const t = setTimeout(() => sectionRef.current.classList.add("reveal-ready"), 0);
     return () => clearTimeout(t);
   }, []);
-  useReveal(".reveal-scope figure"); // nur hier
+  useReveal(".reveal-scope figure");
 
-  // ========= DYNAMISCHE SPANNEN (moderate Heuristik) =========
+  // =============================
+  // SPALTENKLASSEN (Grid-Größen je nach Seitenverhältnis)
+  // =============================
   const [spanClasses, setSpanClasses] = useState(() =>
-    Array(items.length).fill("span-6")
+    Array(items.length).fill("span-6") // Startwert
   );
 
   function handleMeasured(i, w, h) {
     if (!w || !h) return;
     const r = w / h; // aspect ratio
 
-    // „Wie vorher“: moderat und bewährt
-    // >2.2 → 12 | >1.6 → 10 | >1.3 → 8 | 0.85–1.3 → 6 | <0.85 → 4
+    // Angepasste Heuristik:
+    // Breite Bilder großzügiger einstufen → wirken nicht mehr "zu klein"
+    // >1.9 → 12 | >1.6 → 10 | >1.3 → 8 | 0.85–1.3 → 6 | <0.85 → 4
     let cls =
-      r > 2.2 ? "span-12" :
+      r > 1.9 ? "span-12" :
       r > 1.6 ? "span-10" :
       r > 1.3 ? "span-8"  :
       r < 0.85 ? "span-4" : "span-6";
 
-    // Optionaler Notch (falls du nie span-4 willst):
+    // Notbremse (falls du nie span-4 willst → einfach aktivieren)
     // if (cls === "span-4") cls = "span-6";
 
     setSpanClasses(prev => {
@@ -48,28 +54,47 @@ export default function SeriesPage() {
     });
   }
 
-  // ========= LIGHTBOX =========
+  // =============================
+  // LIGHTBOX
+  // =============================
   const [open, setOpen] = useState(false);
   const [idx, setIdx] = useState(0);
 
-  // ========= OFFSETS (nur bei großen Kacheln) =========
-  const OFFSETS_ENABLED = true; // auf false setzen → komplett aus
+  // =============================
+  // OFFSETS (Whitespace für Magazin-Look)
+  // =============================
+  const OFFSETS_ENABLED = true; // auf false setzen → alle Offsets aus
+
   function offsetClassFor(i, img, span) {
     if (!OFFSETS_ENABLED) return "";
+
+    const lower = (img?.src || "").toLowerCase();
+
+    // Spezielle Dateien nicht versetzen (damit sie "ankern")
+    if (lower.includes("-pano") || lower.includes("-hero")) return "";
+
+    // Nur große Kacheln versetzen
     const isBig = span === "span-8" || span === "span-10" || span === "span-12";
     if (!isBig) return "";
-    const lower = (img?.src || "").toLowerCase();
-    if (lower.includes("-pano")) return ""; // Panos nicht versetzen
+
+    // Sehr breite Bilder (span-10 / span-12) nicht versetzen → wirken sonst kleiner
+    if (span === "span-10" || span === "span-12") return "";
+
+    // Beispiel: jedes 3. große Bild leicht versetzen
     return (i % 3 === 2) ? "offset-2" : "";
   }
 
-  // ========= HERO (optional per Flag) =========
+  // =============================
+  // HERO-BILD (optional Full-Bleed oben; Dateiname enthält "-hero")
+  // =============================
   const heroIdx = UI_FLAGS.HERO
     ? items.findIndex(it => it.src.toLowerCase().includes("-hero"))
     : -1;
   const hero = heroIdx >= 0 ? items[heroIdx] : null;
 
-  // ========= FALLBACK =========
+  // =============================
+  // FALLBACK: Serie nicht gefunden
+  // =============================
   if (!current) {
     return (
       <main className="wrap" style={{ paddingTop: 24 }}>
@@ -79,7 +104,9 @@ export default function SeriesPage() {
     );
   }
 
-  // ========= RENDER =========
+  // =============================
+  // RENDER
+  // =============================
   return (
     <div>
       <Header />
@@ -87,10 +114,12 @@ export default function SeriesPage() {
         <Link to="/" className="backlink">← Zurück</Link>
         <h2 className="series-title">{current.title}</h2>
 
+        {/* Optional: Section Label */}
         {UI_FLAGS.SECTION_LABEL && (
           <div className="section-label">Selected Works</div>
         )}
 
+        {/* Hero-Bild, wenn Flag aktiv */}
         {hero && (
           <figure
             className="hero"
@@ -102,6 +131,7 @@ export default function SeriesPage() {
           </figure>
         )}
 
+        {/* Galerie */}
         <section className="grid reveal-scope" ref={sectionRef}>
           {items.map((img, i) => {
             if (i === heroIdx) return null; // Hero nicht doppelt
@@ -131,6 +161,7 @@ export default function SeriesPage() {
       </main>
       <Footer />
 
+      {/* Lightbox */}
       <Lightbox
         open={open}
         items={items}
