@@ -10,8 +10,8 @@ export default function Header() {
         <div className="strap">Street • Architecture • Landscape</div>
       </div>
       <div className="aside">
-        <a href="https://www.instagram.com/jonas.bild/" target="_blank" rel="noopener">
-          @jonas.bild
+        <a href="https://www.instagram.com/jonasnemeth_/" target="_blank" rel="noopener">
+          @jonasnemeth_
         </a>
         <Link to="/">🏠</Link>
       </div>
