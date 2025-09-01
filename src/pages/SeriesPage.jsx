@@ -12,79 +12,48 @@ export default function SeriesPage() {
   const current = series.find((s) => s.id === id);
   const items = useMemo(() => current?.images ?? [], [current]);
 
-  // =============================
-  // REVEAL (nur hier, sichtbar bis ready)
-  // =============================
+  // ========= REVEAL: sichtbar bis JS ready =========
   const sectionRef = useRef(null);
   useEffect(() => {
     if (!sectionRef.current) return;
     const t = setTimeout(() => sectionRef.current.classList.add("reveal-ready"), 0);
     return () => clearTimeout(t);
   }, []);
-  useReveal(".reveal-scope figure");
+  useReveal(".reveal-scope figure"); // nur hier
 
-  // =============================
-  // GRID-SPANNEN (sichtbarer, großzügiger)
-  // =============================
+  // ========= DYNAMISCHE SPANNEN (moderate Heuristik) =========
   const [spanClasses, setSpanClasses] = useState(() =>
     Array(items.length).fill("span-6")
   );
 
-  function bumpForWideScreens(cls) {
-    // Auf großen Screens (>= 1360px) eine Stufe größer machen
-    if (typeof window !== "undefined" && window.innerWidth >= 1360) {
-      if (cls === "span-6") return "span-8";
-      if (cls === "span-8") return "span-10";
-    }
-    return cls;
-  }
-
   function handleMeasured(i, w, h) {
-  if (!w || !h) return;
-  const r = w / h; // aspect ratio
+    if (!w || !h) return;
+    const r = w / h; // aspect ratio
 
-  // Aggressiver für Breite:
-  // >1.90 → 12  | >1.50 → 10 | >1.20 → 8
-  // 0.90–1.20 → 8 | 0.75–0.90 → 6 | <0.75 → 6 (kein span-4 mehr)
-  let cls =
-    r > 1.90 ? "span-12" :
-    r > 1.50 ? "span-10" :
-    r > 1.20 ? "span-8"  :
-    r >= 0.90 ? "span-8" :
-    r >= 0.75 ? "span-6" :
-    "span-6";
+    // „Wie vorher“: moderat und bewährt
+    // >2.2 → 12 | >1.6 → 10 | >1.3 → 8 | 0.85–1.3 → 6 | <0.85 → 4
+    let cls =
+      r > 2.2 ? "span-12" :
+      r > 1.6 ? "span-10" :
+      r > 1.3 ? "span-8"  :
+      r < 0.85 ? "span-4" : "span-6";
 
-  // Dateinamen-Hints (optional): -hero / -wide / -pano → immer sehr groß
-  // (passt du an, wenn du andere Suffixe nutzt)
-  const src = (items[i]?.src || "").toLowerCase();
-  if (src.includes("-hero") || src.includes("-wide") || src.includes("-pano")) {
-    cls = "span-12";
+    // Optionaler Notch (falls du nie span-4 willst):
+    // if (cls === "span-4") cls = "span-6";
+
+    setSpanClasses(prev => {
+      const next = [...prev];
+      next[i] = cls;
+      return next;
+    });
   }
 
-  // Dynamik: jedes 4. Bild eine Stufe größer (falls möglich)
-  if (i % 4 === 1) {
-    if (cls === "span-8") cls = "span-10";
-    else if (cls === "span-10") cls = "span-12";
-  }
-
-  setSpanClasses(prev => {
-    const next = [...prev];
-    next[i] = cls;
-    return next;
-  });
-}
-
-  // =============================
-  // LIGHTBOX
-  // =============================
+  // ========= LIGHTBOX =========
   const [open, setOpen] = useState(false);
   const [idx, setIdx] = useState(0);
 
-  // =============================
-  // OFFSETS (Whitespace; nur bei großen Kacheln)
-  // =============================
-  const OFFSETS_ENABLED = true; // bei Bedarf auf false
-
+  // ========= OFFSETS (nur bei großen Kacheln) =========
+  const OFFSETS_ENABLED = true; // auf false setzen → komplett aus
   function offsetClassFor(i, img, span) {
     if (!OFFSETS_ENABLED) return "";
     const isBig = span === "span-8" || span === "span-10" || span === "span-12";
@@ -94,17 +63,13 @@ export default function SeriesPage() {
     return (i % 3 === 2) ? "offset-2" : "";
   }
 
-  // =============================
-  // HERO-BILD (optional per Flag, Dateiname enthält "-hero")
-  // =============================
+  // ========= HERO (optional per Flag) =========
   const heroIdx = UI_FLAGS.HERO
     ? items.findIndex(it => it.src.toLowerCase().includes("-hero"))
     : -1;
   const hero = heroIdx >= 0 ? items[heroIdx] : null;
 
-  // =============================
-  // FALLBACK: Serie nicht gefunden
-  // =============================
+  // ========= FALLBACK =========
   if (!current) {
     return (
       <main className="wrap" style={{ paddingTop: 24 }}>
@@ -114,9 +79,7 @@ export default function SeriesPage() {
     );
   }
 
-  // =============================
-  // RENDER
-  // =============================
+  // ========= RENDER =========
   return (
     <div>
       <Header />

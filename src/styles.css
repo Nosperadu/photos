@@ -147,19 +147,18 @@ figcaption {
 /* 5.4 Reveal-on-Scroll */
 /* nachher: Reveal greift NUR in Containern mit .reveal-scope */
 /* Sichtbar bis JS bereit ist */
+/* Sichtbar bis JS „ready“ ist */
 .f-reveal .reveal-scope figure{
   opacity: 1;
   transform: none;
   transition: opacity .5s ease, transform .5s ease;
 }
-
-/* Erst wenn ready → voranimierter Zustand */
+/* Erst nach Mount voranimiert */
 .f-reveal .reveal-scope.reveal-ready figure{
   opacity: 0;
   transform: translateY(10px);
 }
-
-/* Wenn intersected → einblenden */
+/* Beim Eintreten einblenden */
 .f-reveal .reveal-scope.reveal-ready figure.reveal-in{
   opacity: 1;
   transform: none;
