@@ -254,21 +254,64 @@ figure, figcaption, .wrap, .grid img, .section-label, .series-intro {
 @media (max-width: 1100px){
   .offset-1, .offset-2, .offset-3 { grid-column-start: auto; }
 }
-/* ==============================
-   (Optional) Hero Full-bleed
-   - nur sichtbar, wenn in ui.flags.js HERO: true
-   - figcaption wird wieder in die max Breite geführt
-   ============================== */
-@media (max-width: 480px){
+
+/* 1) Global: horizontales Scrollen hart verhindern */
+html, body {
+  overflow-x: hidden;
+}
+
+/* 2) Mobile: symmetrische Innenabstände + kein Randkleben */
+@media (max-width: 640px){
   .wrap {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  .series-title {
-    font-size: 24px; /* kleinere, aber elegante Headline */
+  .grid {
+    gap: 16px;
   }
-  .series-intro {
-    font-size: 13px;
-    line-height: 1.6;
+  figure { margin: 0; } /* Sicherheit: keine negativen/seltsamen Margins */
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    /* optional, wenn du leicht gerundete Ecken willst:
+    border-radius: 6px;
+    */
   }
+}
+
+/* 3) Hauptursache: Full-bleed-Hero mit 100vw erzeugt Überbreite.
+      Auf Mobile NICHT full-bleed, sondern innerhalb der .wrap zentriert. */
+@media (max-width: 768px){
+  .f-hero .hero {
+    margin: 0 0 clamp(20px, 4vw, 32px) !important; /* statt calc(50% - 50vw) */
+  }
+  .f-hero .hero img {
+    width: 100% !important;  /* statt 100vw */
+    height: auto;
+  }
+  .f-hero .hero figcaption {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* 4) Sicherheit: alle Elemente, die versehentlich 100vw nutzen, beschneiden */
+@media (max-width: 768px){
+  [style*="width: 100vw"], .w-100vw, .full-bleed {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* 5) Grid-Spalten sauber definieren, damit keine „Überbreiten“ entstehen */
+.grid {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+/* 6) Falls Offsets auf Mobile komisch wirken → neutralisieren */
+@media (max-width: 1100px){
+  .offset-1, .offset-2, .offset-3, .offset-4 { grid-column-start: auto; }
 }
