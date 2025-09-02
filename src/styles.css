@@ -315,3 +315,16 @@ html, body {
 @media (max-width: 1100px){
   .offset-1, .offset-2, .offset-3, .offset-4 { grid-column-start: auto; }
 }
+/* Grid-Definition hart durchsetzen */
+.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.span-12 { grid-column: 1 / -1 !important; } /* volle Zeile erzwingen */
+.span-10 { grid-column: span 10; }
+.span-8  { grid-column: span 8; }
+.span-6  { grid-column: span 6; }
+
+/* Offsets – nur bei span-8 nutzen */
+.offset-2 { grid-column-start: 3; }
+
+@media (max-width:1100px){
+  .offset-2 { grid-column-start: auto !important; }
+}
