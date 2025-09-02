@@ -1,20 +1,16 @@
 // =============================
-// SeriesPage.jsx
-// Magazin-Layout mit dynamischen Spalten
-// - Portrait-Schutz: Hochkant bleibt span-6 (keine Offsets)
-// - Wide-Boost: breite Motive werden konsequent span-10/12
-// - Dateinamen-Hints: -wide / -pano / -hero erzwingen groß
-// - Offsets nur bei großen Kacheln; NIE für span-10/12
-// - Reveal nur auf dieser Seite (sichtbar bis "ready")
-// - Optional: Hero, Intro, Next-Series
+// SeriesPage.jsx – Wide-on-own-row
+// Ziel: Querformat immer allein in einer Zeile, Portraits/Quadrate nebeneinander
+// - r >= 1.35 => span-12 (ganze Zeile)
+// - 0.9 <= r < 1.35 => span-8 (nebeneinander, aber präsent)
+// - r < 0.9 => span-6 (Portrait-Schutz, nie mikrig)
+// - Keine Offsets für span-12 (und Portraits), nur optional für span-8
 // =============================
 
 import React, { useMemo, useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-// ⬇️ Wenn du das EXIF-Script nutzt:
+// Falls du noch series.data.js nutzt: Pfad anpassen
 import { series } from "../series.generated.js";
-// ⬇️ Ansonsten:
-// import { series } from "../series.data.js";
 import Header from "../components/Header.jsx";
 import Footer from "../components/Footer.jsx";
 import Lightbox from "../components/Lightbox.jsx";
@@ -22,17 +18,14 @@ import { UI_FLAGS } from "../ui.flags.js";
 import { useReveal } from "../hooks/useReveal.js";
 
 export default function SeriesPage() {
-  // Aktuelle Serie aus URL
   const { id } = useParams();
   const currentIndex = series.findIndex((s) => s.id === id);
   const current = currentIndex >= 0 ? series[currentIndex] : null;
-
-  // Bilder stabilisieren
   const items = useMemo(() => current?.images ?? [], [current]);
 
-  // ========= REVEAL =========
-  // Bilder sind sichtbar; nachdem die Section gemountet ist,
-  // setzt .reveal-ready die "Einblende"-Animation (per IntersectionObserver im Hook)
+  // =============================
+  // REVEAL – sichtbar bis "ready"
+  // =============================
   const sectionRef = useRef(null);
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -41,63 +34,32 @@ export default function SeriesPage() {
   }, []);
   useReveal(".reveal-scope figure");
 
-  // ========= DYNAMISCHE SPANNEN =========
-  // spanClasses[i] -> "span-12" | "span-10" | "span-8" | "span-6"
+  // =============================
+  // SPANNEN – Querformat allein, Portraits/Quadrat nebeneinander
+  // =============================
   const [spanClasses, setSpanClasses] = useState(() =>
     Array(items.length).fill("span-6")
   );
 
-  // Viewport-Boost: auf breiten Screens noch eine Stufe größer
-  function boostForViewport(cls) {
-    if (typeof window === "undefined") return cls;
-    const w = window.innerWidth || 0;
-    if (w >= 1360) {
-      if (cls === "span-8") return "span-10";
-      if (cls === "span-10") return "span-12";
-    } else if (w >= 1200) {
-      if (cls === "span-8") return "span-10";
-    }
-    return cls;
-  }
+  // Schwelle, ab der ein Bild als „breit“ gilt und allein stehen soll:
+  // 1.35 ist spürbar quer, aber nicht zu aggressiv. Gern auf 1.30/1.40 anpassen.
+  const WIDE_THRESHOLD = 1.35;
 
   function handleMeasured(i, w, h) {
     if (!w || !h) return;
-    const r = w / h; // Seitenverhältnis (Breite/Höhe)
-    const srcLower = (items[i]?.src || "").toLowerCase();
+    const r = w / h; // Seitenverhältnis
 
-    // ✅ PORTRAIT-SCHUTZ:
-    // Echte Hochkantbilder bleiben "span-6" und werden NICHT weiter geboostet.
-    if (r < 0.9) {
-      setSpanClasses((prev) => {
-        const next = [...prev];
-        next[i] = "span-6";
-        return next;
-      });
-      return;
+    let cls;
+    if (r >= WIDE_THRESHOLD) {
+      // Querformat → ganze Zeile
+      cls = "span-12";
+    } else if (r >= 0.9) {
+      // Quadrat/leicht quer → präsent, aber kombinierbar
+      cls = "span-8";
+    } else {
+      // Portrait → nie zu klein
+      cls = "span-6";
     }
-
-    // ✅ DATEINAMEN-HINTS (erzwingen groß)
-    // -wide / -pano / -hero -> immer span-12 (danach ggf. Viewport-Boost)
-    if (srcLower.includes("-pano") || srcLower.includes("-hero") || srcLower.includes("-wide")) {
-      setSpanClasses((prev) => {
-        const next = [...prev];
-        next[i] = boostForViewport("span-12");
-        return next;
-      });
-      return;
-    }
-
-    // ✅ WIDE-BOOST (breite Motive sichtbar machen)
-    // >1.90 → 12 | >1.50 → 10 | >1.25 → 8 | 0.90–1.25 → 8
-    // (Quadrat/leicht quer nicht zu klein)
-    let cls =
-      r > 1.90 ? "span-12" :
-      r > 1.50 ? "span-10" :
-      r > 1.25 ? "span-8"  :
-                 "span-8";
-
-    // Auf großen Screens eine Stufe hoch
-    cls = boostForViewport(cls);
 
     setSpanClasses((prev) => {
       const next = [...prev];
@@ -106,41 +68,42 @@ export default function SeriesPage() {
     });
   }
 
-  // ========= LIGHTBOX =========
+  // =============================
+  // LIGHTBOX
+  // =============================
   const [open, setOpen] = useState(false);
   const [idx, setIdx] = useState(0);
 
-  // ========= OFFSETS =========
-  // Weißraum-Versatz im Grid für Magazin-Look
-  // - nur bei großen Kacheln (span-8)
-  // - NIE bei span-10/12 (die sollen "ankern")
-  const OFFSETS_ENABLED = true; // auf false -> komplett aus
+  // =============================
+  // OFFSETS – Weißraum nur für mittlere Kacheln (span-8)
+  // =============================
+  const OFFSETS_ENABLED = true; // auf false setzen, wenn du strikt ohne Versatz willst
 
   function offsetClassFor(i, img, span) {
     if (!OFFSETS_ENABLED) return "";
 
-    // Portraits (span-6) → nie versetzen
+    // Querformat (span-12) nie versetzen – sie sollen „ankern“
+    if (span === "span-12") return "";
+
+    // Portraits (span-6) nicht versetzen, um saubere Reihen zu halten
     if (span === "span-6") return "";
 
-    // sehr große Kacheln → nie versetzen (dominant bleiben)
-    if (span === "span-12" || span === "span-10") return "";
-
-    const lower = (img?.src || "").toLowerCase();
-    // Spezielle Weitformate ebenfalls nicht versetzen
-    if (lower.includes("-pano") || lower.includes("-hero") || lower.includes("-wide")) return "";
-
-    // Beispiel: jede 3. große Kachel leicht versetzen
+    // Nur span-8 (Quadrat/leicht quer) bekommt leichtes Spiel
+    // Beispielhaft: jede dritte span-8 mit kleinem Offset
     return (i % 3 === 2) ? "offset-2" : "";
   }
 
-  // ========= HERO (optional per Flag) =========
-  // Zeigt erstes Bild mit "-hero" im Namen als Full-Bleed oben
+  // =============================
+  // HERO (optional)
+  // =============================
   const heroIdx = UI_FLAGS.HERO
     ? items.findIndex((it) => it.src.toLowerCase().includes("-hero"))
     : -1;
   const hero = heroIdx >= 0 ? items[heroIdx] : null;
 
-  // ========= FALLBACK =========
+  // =============================
+  // FALLBACK
+  // =============================
   if (!current) {
     return (
       <main className="wrap" style={{ paddingTop: 24 }}>
@@ -150,33 +113,21 @@ export default function SeriesPage() {
     );
   }
 
-  // ========= NEXT SERIES =========
-  // Dezente Navigation am Seitenende, hält User im Flow
+  // =============================
+  // NEXT SERIES
+  // =============================
   const nextIndex = (currentIndex + 1) % series.length;
   const next = series[nextIndex];
 
-  // ========= RENDER =========
   return (
     <div>
       <Header />
       <main className="wrap">
-        {/* Back-Link auf Englisch für Konsistenz */}
         <Link to="/" className="backlink">← Back</Link>
-
-        {/* Serientitel */}
         <h2 className="series-title">{current.title}</h2>
+        {current.description && <p className="series-intro">{current.description}</p>}
+        {UI_FLAGS.SECTION_LABEL && <div className="section-label">Selected Works</div>}
 
-        {/* Optionaler Intro-Lead (aus series.data/generated) */}
-        {current.description && (
-          <p className="series-intro">{current.description}</p>
-        )}
-
-        {/* Optionales Section-Label */}
-        {UI_FLAGS.SECTION_LABEL && (
-          <div className="section-label">Selected Works</div>
-        )}
-
-        {/* Hero oben (falls Flag aktiv & Bild vorhanden) */}
         {hero && (
           <figure
             className="hero"
@@ -188,10 +139,9 @@ export default function SeriesPage() {
           </figure>
         )}
 
-        {/* Galerie mit Reveal-Scope */}
         <section className="grid reveal-scope" ref={sectionRef}>
           {items.map((img, i) => {
-            if (i === heroIdx) return null; // Hero nicht doppelt
+            if (i === heroIdx) return null;
             const span = spanClasses[i];
             const offset = offsetClassFor(i, img, span);
             const classes = `${span} ${offset}`.trim();
@@ -216,7 +166,6 @@ export default function SeriesPage() {
           })}
         </section>
 
-        {/* Next-Series Link (dezent) */}
         {next && (
           <div className="series-next">
             <span className="series-next__label">Next series</span>
@@ -226,10 +175,8 @@ export default function SeriesPage() {
           </div>
         )}
       </main>
-
       <Footer />
 
-      {/* Lightbox mit Pfeilen & Swipe */}
       <Lightbox
         open={open}
         items={items}
