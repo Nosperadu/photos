@@ -1,140 +1,174 @@
-:root{ --bg:#0b0b0b; --fg:#eaeaea; --muted:#9a9a9a; --hair:#2a2a2a; --maxw:1200px; --gap:36px; }
-:root[data-theme="light"]{ --bg:#fafafa; --fg:#0c0c0c; --muted:#5a5a5a; --hair:#e6e6e6; }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial}
-a{color:inherit;text-decoration:none}
+/* =========================================
+   Jonas Portfolio – Clean Final Styles
+   (Notizen im Code – Blöcke modular)
+   ========================================= */
 
-.mast{max-width:var(--maxw);margin:48px auto 8px;padding:0 24px;display:grid;grid-template-columns:1fr auto;align-items:end;gap:16px}
-.brand h1{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:clamp(42px,7vw,78px);margin:0;line-height:1.03}
-.strap{margin-top:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.18em;font-size:12px}
-.aside{display:flex;align-items:center;gap:18px}
+/* -----------------------------------------
+   0) Design-Token / Basis
+   ----------------------------------------- */
+:root{
+  --bg:#0b0b0b;
+  --fg:#eaeaea;
+  --muted:#9a9a9a;
+  --hair:#2a2a2a;
+  --maxw:1600px;   /* Bühne breiter, damit span-12 auch groß wirkt */
+  --gap:36px;      /* Bildabstand */
+}
 
-.wrap{max-width:var(--maxw);margin:0 auto 80px;padding:0 24px}
+:root[data-theme="light"]{
+  --bg:#fafafa;
+  --fg:#0c0c0c;
+  --muted:#5a5a5a;
+  --hair:#e6e6e6;
+}
 
-/* --- Grid + dynamische Spalten --- */
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  font:400 16px/1.6 Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+}
+a{ color:inherit; text-decoration:none; }
+
+/* -----------------------------------------
+   1) Rahmenlayout (Header/Mast, Container, Footer)
+   ----------------------------------------- */
+.mast{
+  max-width:var(--maxw);
+  margin:48px auto 8px;
+  padding:0 24px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:end;
+  gap:16px;
+  border-bottom:1px solid var(--hair);     /* Hairline – feine Trennung */
+  padding-bottom:18px;
+  margin-bottom:36px;
+}
+.brand h1{
+  font-family:"Playfair Display",Georgia,serif;
+  font-weight:700;
+  font-size:clamp(42px,7vw,78px);
+  margin:0;
+  line-height:1.03;
+}
+.strap{
+  margin-top:10px;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.18em;
+  font-size:12px;
+}
+.aside{ display:flex; align-items:center; gap:18px; }
+
+.wrap{
+  max-width:var(--maxw);
+  margin:0 auto 80px;
+  padding:0 24px;
+}
+
+footer{
+  max-width:var(--maxw);
+  margin:40px auto 60px;
+  padding:20px 24px 0;
+  color:var(--muted);
+  font-size:13px;
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  border-top:1px solid var(--hair);        /* Hairline – Top */
+}
+
+/* -----------------------------------------
+   2) Grid – EINMAL klar definieren
+   - span-12 = volle Zeile (harte Regel)
+   - span-8/6 für Magazine-Layout
+   ----------------------------------------- */
 .grid{
   display:grid;
-  grid-template-columns:repeat(12,1fr);
+  grid-template-columns:repeat(12, minmax(0,1fr));
   gap:var(--gap);
-  grid-auto-flow:dense; /* füllt Lücken besser */
+  /* grid-auto-flow:dense;  <- optional; wenn Reihenfolge wichtiger ist, auslassen */
 }
-figure{margin:0}
-figure img{width:100%;height:auto;display:block;border:none}
-figcaption{margin-top:.6rem;color:var(--muted);font-size:12px;letter-spacing:.12em;text-transform:uppercase}
 
-/* Neu ergänzt: .span-10 (für breite Landscape) */
-.span-12{grid-column:span 12}
-.span-10{grid-column:span 10}
-.span-8{grid-column:span 8}
-.span-6{grid-column:span 6}
-.span-4{grid-column:span 4}
+.span-12{ grid-column: 1 / -1 !important; } /* volle Zeile – ohne Diskussion */
+.span-10{ grid-column: span 10; }
+.span-8 { grid-column: span 8; }
+.span-6 { grid-column: span 6; }
+.span-4 { grid-column: span 4; }
 
-footer{max-width:var(--maxw);margin:40px auto 60px;padding:0 24px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-
-.backlink{display:inline-block;margin-bottom:1rem;color:var(--muted)}
-.series-title{margin:0 0 1.5rem;font-family:"Playfair Display",serif;font-size:2rem}
-
-/* Lightbox */
-.lb{
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.94);
-  display: grid; grid-template-columns: auto 1fr auto;
-  align-items: center; justify-items: center;
-  z-index: 1000; padding: 24px;
-}
-.lb-figure{ margin: 0; max-width: min(92vw, 1600px); max-height: 88vh; display: grid; justify-items: center }
-.lb-figure img{ max-width: 100%; max-height: 80vh; width: auto; height: auto; display: block }
-.lb-figure figcaption{
-  margin-top: .8rem;
-  color:#d0d0d0;
-  font-size:13px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  text-align:center;
-}
-.lb-close{
-  position: fixed; top: 12px; right: 14px;
-  border: none; background: transparent; color: #dcdcdc;
-  font-size: 22px; cursor: pointer; padding: 6px 8px;
-}
-.lb-nav{
-  border: none; background: rgba(255,255,255,.08);
-  color: #fff; width: 42px; height: 42px; border-radius: 999px;
-  display: grid; place-items: center; cursor: pointer; font-size: 28px;
-}
-.lb-prev{ margin-right: 16px }
-.lb-next{ margin-left: 16px }
-@media (max-width: 640px){
-  .lb{ grid-template-columns: 1fr; }
-  .lb-prev, .lb-next{ position: fixed; top: 50%; transform: translateY(-50%) }
-  .lb-prev{ left: 10px } .lb-next{ right: 10px }
-}
-.theme-toggle button {
-  background: none;
-  border: none;
-  font: inherit;
-  color: var(--muted);
-  cursor: pointer;
-  padding: 4px 8px;
-  text-transform: uppercase;
-  letter-spacing: .08em;
-}
-.theme-toggle button.active {
-  color: var(--fg);
-  font-weight: 600;
-}
-.theme-toggle button:hover {
-  color: var(--fg);
-}
-.mast {
-  border-bottom: 1px solid var(--hair);
-  padding-bottom: 18px;
-  margin-bottom: 36px;
-}
-footer {
-  border-top: 1px solid var(--hair);
-  padding-top: 20px;
-}
-/* Offsets für Magazin-Whitespace (nur Desktop) */
+/* Offsets für Magazin-Whitespace (nur Desktop sinnvoll) */
 .offset-1 { grid-column-start: 2; }
 .offset-2 { grid-column-start: 3; }
 .offset-3 { grid-column-start: 4; }
 
-/* Auf kleinen Screens Offsets neutralisieren */
-@media (max-width: 1100px){
-  .offset-1, .offset-2, .offset-3 { grid-column-start: auto; }
-}
-
-/* Monospace-Caption für editorial Look */
-figcaption {
-  margin-top: .6rem;
-  color: var(--muted);
-  font-size: 12px;
-  letter-spacing: .12em;
-  text-transform: uppercase;
-  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
-}
-/* --- Responsive Spans --- */
+/* Auf kleineren Screens Offsets neutralisieren */
 @media (max-width:1100px){
-  .span-12,.span-10,.span-8,.span-6{grid-column:span 12}
-  .span-4{grid-column:span 6}
-}
-@media (max-width:640px){
-  .span-4{grid-column:span 12}
-  figcaption{font-size:11px}
+  .offset-1, .offset-2, .offset-3 { grid-column-start: auto !important; }
 }
 
-/* 5.1 Hairlines (Header/Footer) */
-.f-hairlines .mast { border-bottom: 1px solid var(--hair); padding-bottom: 18px; margin-bottom: var(--gap); }
-.f-hairlines footer { border-top: 1px solid var(--hair); padding-top: 20px; }
-
-/* 5.2 Section Label */
-.f-section-label .section-label{
-  font-size: 11px; letter-spacing: .18em; text-transform: uppercase;
-  color: var(--muted); margin-bottom: 12px;
+/* -----------------------------------------
+   3) Responsive Spans – sinnvolle Stufen
+   - Tablet (~≤1200px): 2 Spalten (6/6), 10 fällt auf ganze Zeile
+   - Phone (~≤800px): 1 Spalte
+   ----------------------------------------- */
+@media (max-width:1200px){
+  .span-10 { grid-column: 1 / -1; }
+  .span-8  { grid-column: span 6; }
+  .span-6  { grid-column: span 6; }
+}
+@media (max-width:800px){
+  .span-12, .span-10, .span-8, .span-6, .span-4 { grid-column: 1 / -1; }
 }
 
-/* 5.3 Hover Microinteraction (dezenter Lift) */
+/* -----------------------------------------
+   4) Figure / Images / Captions
+   ----------------------------------------- */
+figure{ margin:0; position:relative; }
+figure img{
+  width:100%;
+  height:auto;
+  display:block;
+  border:none;
+}
+figcaption{
+  margin-top:.6rem;
+  color:var(--muted);
+  font-size:12px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+
+/* -----------------------------------------
+   5) Typografie – Serie
+   ----------------------------------------- */
+.backlink{
+  display:inline-block;
+  margin-bottom:1rem;
+  color:var(--muted);
+}
+.series-title{
+  margin:0 0 1.5rem;
+  font-family:"Playfair Display",serif;
+  font-size:clamp(28px,5vw,56px);
+  line-height:1.1;
+}
+.series-intro{
+  max-width:50ch;
+  margin:.5rem 0 var(--gap);
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+  text-wrap:balance;
+}
+
+/* -----------------------------------------
+   6) Microinteractions (Hover) – dezent
+   ----------------------------------------- */
 .f-hover figure img{
   transition: transform .25s ease, filter .25s ease;
   will-change: transform;
@@ -144,187 +178,123 @@ figcaption {
   filter: contrast(1.04);
 }
 
-/* 5.4 Reveal-on-Scroll */
-/* nachher: Reveal greift NUR in Containern mit .reveal-scope */
-/* Sichtbar bis JS bereit ist */
-/* Sichtbar bis JS „ready“ ist */
+/* -----------------------------------------
+   7) Reveal-on-Scroll – scoped auf .reveal-scope
+   (sichtbar bis JS ready, danach Einblendung)
+   ----------------------------------------- */
 .f-reveal .reveal-scope figure{
-  opacity: 1;
-  transform: none;
-  transition: opacity .5s ease, transform .5s ease;
+  opacity:1;
+  transform:none;
+  transition:opacity .5s ease, transform .5s ease;
 }
-/* Erst nach Mount voranimiert */
 .f-reveal .reveal-scope.reveal-ready figure{
-  opacity: 0;
-  transform: translateY(10px);
+  opacity:0;
+  transform:translateY(10px);
 }
-/* Beim Eintreten einblenden */
 .f-reveal .reveal-scope.reveal-ready figure.reveal-in{
-  opacity: 1;
-  transform: none;
+  opacity:1;
+  transform:none;
 }
 
-/* 5.5 Hero (Full-bleed) */
+/* -----------------------------------------
+   8) Hero (Full-bleed) – nur wenn aktiv
+   Desktop: 100vw, Mobile: innerhalb .wrap
+   ----------------------------------------- */
 .f-hero .hero{
-  margin: 0 calc(50% - 50vw) clamp(24px,4vw,40px);
+  margin:0 calc(50% - 50vw) clamp(24px,4vw,40px);
 }
-.f-hero .hero img{ width: 100vw; height: auto; display: block; }
-.f-hero .hero figcaption{ max-width: var(--maxw); margin: .6rem auto 0; padding: 0 24px; }
-
-/* ==============================
-   Intro-Zeile (Design-Idee #2)
-   - erscheint unter dem Serientitel, wenn 'description' vorhanden
-   ============================== */
-.series-intro{
-  max-width: 50ch;
-  margin: .5rem 0 var(--gap);
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
-  text-wrap: balance;
+.f-hero .hero img{
+  width:100vw;
+  height:auto;
+  display:block;
+}
+.f-hero .hero figcaption{
+  max-width:var(--maxw);
+  margin:.6rem auto 0;
+  padding:0 24px;
+}
+@media (max-width:768px){
+  .f-hero .hero{
+    margin:0 0 clamp(20px,4vw,32px) !important; /* statt 100vw-full-bleed */
+  }
+  .f-hero .hero img{ width:100% !important; }
+  .f-hero .hero figcaption{ padding-left:0; padding-right:0; }
 }
 
-/* ==============================
-   Smooth Theme Transition (Design-Idee #3)
-   - weiche 0.28s-Transition bei Dark/Light Umschaltung
-   ============================== */
+/* -----------------------------------------
+   9) Next-Series Navigation – dezent
+   ----------------------------------------- */
+.series-next{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-top:calc(var(--gap) + 4px);
+  border-top:1px solid var(--hair);
+  padding-top:16px;
+}
+.series-next__label{
+  font-size:11px;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.series-next__link{
+  font-size:16px;
+  text-underline-offset:3px;
+}
+.series-next__link:hover{ text-decoration:underline; }
+
+/* -----------------------------------------
+   10) Theme Toggle (Text-Buttons)
+   ----------------------------------------- */
+.theme-toggle button{
+  background:none;
+  border:none;
+  font:inherit;
+  color:var(--muted);
+  cursor:pointer;
+  padding:4px 8px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.theme-toggle button.active{ color:var(--fg); font-weight:600; }
+.theme-toggle button:hover{ color:var(--fg); }
+
+/* -----------------------------------------
+   11) Weiche Theme-Transition
+   ----------------------------------------- */
 html, body, header, main, footer,
-figure, figcaption, .wrap, .grid img, .section-label, .series-intro {
+figure, figcaption, .wrap, .grid img, .section-label, .series-intro{
   transition: background-color .28s ease, color .28s ease, border-color .28s ease, filter .28s ease;
 }
 
-/* ==============================
-   Next Series Navigation (Design-Idee #5)
-   - dezenter Trenner + Link zur nächsten Serie
-   ============================== */
-.series-next{
-  display:flex; align-items:baseline; gap:10px;
-  margin-top: calc(var(--gap) + 4px);
-  border-top: 1px solid var(--hair);
-  padding-top: 16px;
-}
-.series-next__label{
-  font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted);
-}
-.series-next__link{
-  font-size: 16px; text-underline-offset: 3px;
-}
-.series-next__link:hover{ text-decoration: underline; }
+/* -----------------------------------------
+   12) Mobile Polish – Ränder & Scroll
+   ----------------------------------------- */
+html, body{ overflow-x:hidden; }  /* hart: kein horizontales Wischen */
 
-/* ==============================
-   Reveal-Effekt (scoped auf .reveal-scope)
-   - Bilder sind sichtbar, bis .reveal-ready gesetzt wird
-   - danach werden sie einzeln eingefadet
-   ============================== */
-.f-reveal .reveal-scope figure{
-  opacity: 1;
-  transform: none;
-  transition: opacity .5s ease, transform .5s ease;
-}
-.f-reveal .reveal-scope.reveal-ready figure{
-  opacity: 0;
-  transform: translateY(10px);
-}
-.f-reveal .reveal-scope.reveal-ready figure.reveal-in{
-  opacity: 1;
-  transform: none;
-}
-
-/* ==============================
-   (Optional) Hero Full-bleed
-   - nur sichtbar, wenn in ui.flags.js HERO: true
-   - figcaption wird wieder in die max Breite geführt
-   ============================== */
-.f-hero .hero{
-  margin: 0 calc(50% - 50vw) clamp(24px,4vw,40px);
-}
-.f-hero .hero img{ width: 100vw; height: auto; display: block; }
-.f-hero .hero figcaption{ max-width: var(--maxw); margin: .6rem auto 0; padding: 0 24px; }
-
-/* ==============================
-   Offsets (Whitespace)
-   - du hast bereits span-12/10/8/6/4 im Grid
-   - offsets verschieben Startspalte → schafft Magazin-Whitespace
-   ============================== */
-.offset-1 { grid-column-start: 2; }
-.offset-2 { grid-column-start: 3; }
-.offset-3 { grid-column-start: 4; }
-
-/* Auf kleineren Screens Offsets neutralisieren (keine krummen Lücken mobil) */
-@media (max-width: 1100px){
-  .offset-1, .offset-2, .offset-3 { grid-column-start: auto; }
-}
-
-/* 1) Global: horizontales Scrollen hart verhindern */
-html, body {
-  overflow-x: hidden;
-}
-
-/* 2) Mobile: symmetrische Innenabstände + kein Randkleben */
-@media (max-width: 640px){
-  .wrap {
-    padding-left: 16px;
-    padding-right: 16px;
-    margin-left: auto;
-    margin-right: auto;
+@media (max-width:640px){
+  .wrap{
+    padding-left:16px;
+    padding-right:16px;
+    margin-left:auto;
+    margin-right:auto;
   }
-  .grid {
-    gap: 16px;
-  }
-  figure { margin: 0; } /* Sicherheit: keine negativen/seltsamen Margins */
-  figure img {
-    display: block;
-    width: 100%;
-    height: auto;
-    /* optional, wenn du leicht gerundete Ecken willst:
-    border-radius: 6px;
-    */
-  }
+  .grid{ gap:16px; }
+  figure{ margin:0; }
+  figcaption{ font-size:11px; }
 }
 
-/* 3) Hauptursache: Full-bleed-Hero mit 100vw erzeugt Überbreite.
-      Auf Mobile NICHT full-bleed, sondern innerhalb der .wrap zentriert. */
-@media (max-width: 768px){
-  .f-hero .hero {
-    margin: 0 0 clamp(20px, 4vw, 32px) !important; /* statt calc(50% - 50vw) */
-  }
-  .f-hero .hero img {
-    width: 100% !important;  /* statt 100vw */
-    height: auto;
-  }
-  .f-hero .hero figcaption {
-    padding-left: 0;
-    padding-right: 0;
-  }
+/* -----------------------------------------
+   13) (Optional) Debug – Klassen/Spans sichtbar machen
+   - nur temporär aktivieren, wenn du mappen willst
+   ----------------------------------------- */
+/*
+figure[class*="span-"]::before{
+  content: attr(class);
+  position:absolute; top:6px; left:8px;
+  font:11px/1.2 system-ui; color:#fff;
+  background:rgba(0,0,0,.35);
+  padding:2px 6px; border-radius:6px;
 }
-
-/* 4) Sicherheit: alle Elemente, die versehentlich 100vw nutzen, beschneiden */
-@media (max-width: 768px){
-  [style*="width: 100vw"], .w-100vw, .full-bleed {
-    width: 100% !important;
-    max-width: 100% !important;
-  }
-}
-
-/* 5) Grid-Spalten sauber definieren, damit keine „Überbreiten“ entstehen */
-.grid {
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-}
-
-/* 6) Falls Offsets auf Mobile komisch wirken → neutralisieren */
-@media (max-width: 1100px){
-  .offset-1, .offset-2, .offset-3, .offset-4 { grid-column-start: auto; }
-}
-/* Grid-Definition hart durchsetzen */
-.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
-.span-12 { grid-column: 1 / -1 !important; } /* volle Zeile erzwingen */
-.span-10 { grid-column: span 10; }
-.span-8  { grid-column: span 8; }
-.span-6  { grid-column: span 6; }
-
-/* Offsets – nur bei span-8 nutzen */
-.offset-2 { grid-column-start: 3; }
-
-@media (max-width:1100px){
-  .offset-2 { grid-column-start: auto !important; }
-}
+*/
